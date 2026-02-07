@@ -25,6 +25,7 @@ export interface Profile {
 		endDate?: string;
 		description?: string;
 	}[];
+	todo: string[];
 }
 
 export const PROFILE: Profile = {
@@ -38,7 +39,7 @@ export const PROFILE: Profile = {
 		"\\____/\\_| \\_\\_| |_/___/    \\/  \\/\\_| |_/\\_/ \\____/  \\___/\\_| \\_/",
 	],
 	role: "Software Engineer",
-	location: "Yorkshire, UK",
+	location: "Leeds, UK",
 	email: "you@example.com", // TODO: make this my real email address
 	links: {
 		github: "https://github.com/br-watson",
@@ -84,5 +85,17 @@ export const PROFILE: Profile = {
 			endDate: "Sep 2024",
 			description: "TODO...",
 		},
+	],
+	todo: [
+		"Finish writing profile (bio, experience, projects, skills etc.)",
+		"Make projects links clickable",
+		"Allow projects to have multiple links (or a git link and a deployment link)",
+		"Add more commands",
+		"Improve txt files output formatting",
+		"Make actual CV",
+		"Add education section",
+		"Add way for mobile to access command history and autocomplete",
+		"Make banner nicer on mobile",
+		"Write README",
 	],
 };
