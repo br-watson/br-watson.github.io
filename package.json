@@ -15,9 +15,11 @@
 		"clean": "rm -rf dist && mkdir -p dist",
 		"typecheck": "tsc --noEmit",
 		"copy": "cp -r src/index.html src/styles.css src/assets dist && cp CNAME dist/CNAME",
+		"copy:dev": "cp -r src/assets dist && cp CNAME dist/CNAME",
 
 		"build:js:dev": "esbuild src/main.ts --bundle --format=esm --target=es2020 --sourcemap --outfile=dist/main.js",
-		"dev": "pnpm run clean && pnpm run copy && esbuild src/main.ts --bundle --format=esm --target=es2020 --sourcemap --outfile=dist/main.js --servedir=dist --watch",
+		"serve:dev": "esbuild src/main.ts src/styles.css src/index.html --bundle --format=esm --target=es2020 --sourcemap --outdir=dist --inject:livereload.js --loader:.html=copy --loader:.css=copy --servedir=dist --watch",
+		"dev": "pnpm run clean && pnpm run copy:dev && pnpm run serve:dev",
 
 		"build:js:prod": "esbuild src/main.ts --bundle --format=esm --target=es2020 --minify --outfile=dist/main.js",
 		"build": "pnpm run clean && pnpm run typecheck && pnpm run copy && pnpm run build:js:prod",
