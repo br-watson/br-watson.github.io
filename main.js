@@ -17,6 +17,7 @@ const title = document.querySelector(".title");
 const ps1 = document.querySelector(".ps1");
 const quickLinks = document.getElementById("quickLinks");
 const quickLinksList = document.getElementById("quickLinksList");
+const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 const SHELL_ID = "brad@portfolio";
 if (title)
     title.textContent = `${SHELL_ID}: ~`;
@@ -48,15 +49,20 @@ setupQuickLinks({
     profile: PROFILE,
     aliases: ["cv", "github", "linkedin"],
     onRunCommand: async (command) => {
+        if (prefersCoarsePointer && document.activeElement === input) {
+            input.blur();
+        }
         terminal.addHistory(command);
         await terminal.run(command);
         renderer.scrollToBottom();
-        prompt.focus();
+        if (!prefersCoarsePointer)
+            prompt.focus();
     },
 });
 applyInitialTheme();
 terminal.boot();
-prompt.focus();
+if (!prefersCoarsePointer)
+    prompt.focus();
 let introResizeRaf = 0;
 window.addEventListener("resize", () => {
     if (introResizeRaf)
