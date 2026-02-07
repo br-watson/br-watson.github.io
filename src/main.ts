@@ -7,6 +7,7 @@ import { createPromptController } from "./services/prompt.js";
 import { createThemeController } from "./services/theme.js";
 import { createToast } from "./services/toast.js";
 import { createDomRenderer } from "./ui/domRenderer.js";
+import { setupQuickLinks } from "./ui/quickLinks.js";
 
 const screen = document.getElementById("screen");
 const form = document.getElementById("prompt") as HTMLFormElement;
@@ -15,6 +16,8 @@ const themeToggle = document.getElementById("themeToggle");
 const toastEl = document.getElementById("toast");
 const title = document.querySelector(".title");
 const ps1 = document.querySelector(".ps1");
+const quickLinks = document.getElementById("quickLinks");
+const quickLinksList = document.getElementById("quickLinksList");
 
 const SHELL_ID = "brad@portfolio";
 
@@ -42,6 +45,19 @@ const terminal = createTerminal({
 
 const prompt = createPromptController({ form, input, terminal, renderer });
 
+setupQuickLinks({
+	container: quickLinks,
+	list: quickLinksList,
+	profile: PROFILE,
+	aliases: ["cv", "github", "linkedin"],
+	onRunCommand: async (command) => {
+		terminal.addHistory(command);
+		await terminal.run(command);
+		renderer.scrollToBottom();
+		prompt.focus();
+	},
+});
+
 applyInitialTheme();
 terminal.boot();
 prompt.focus();
@@ -54,3 +70,17 @@ window.addEventListener("resize", () => {
 		introResizeRaf = 0;
 	});
 });
+
+// let lastTouchEnd = 0;
+// document.addEventListener(
+// 	"touchend",
+// 	(event) => {
+// 		const now = performance.now();
+// 		if (event.touches.length > 0) return;
+// 		if (now - lastTouchEnd <= 300) {
+// 			event.preventDefault();
+// 		}
+// 		lastTouchEnd = now;
+// 	},
+// 	{ passive: false },
+// );

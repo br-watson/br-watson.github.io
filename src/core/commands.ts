@@ -20,6 +20,20 @@ interface Command {
 
 export type Commands = Map<string, Command>;
 
+export function buildOpenAliasMap(profile: Profile) {
+	const aliases = new Map<string, string>();
+
+	if (profile.links.github) aliases.set("github", profile.links.github);
+	if (profile.links.linkedin) aliases.set("linkedin", profile.links.linkedin);
+
+	if (profile.filePaths.cv) aliases.set("cv", profile.filePaths.cv);
+	if (profile.filePaths.dissertation)
+		aliases.set("dissertation", profile.filePaths.dissertation);
+	if (profile.email) aliases.set("email", `mailto:${profile.email}`);
+
+	return aliases;
+}
+
 export function createCommandRegistry({ profile }: { profile: Profile }) {
 	const commands: Commands = new Map();
 
@@ -149,20 +163,6 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 		},
 	);
 
-	function getOpenAliasMap(profile: Profile) {
-		const m = new Map();
-
-		if (profile.links.github) m.set("github", profile.links.github);
-		if (profile.links.linkedin) m.set("linkedin", profile.links.linkedin);
-
-		if (profile.filePaths.cv) m.set("cv", profile.filePaths.cv);
-		if (profile.filePaths.dissertation)
-			m.set("dissertation", profile.filePaths.dissertation);
-		if (profile.email) m.set("email", `mailto:${profile.email}`);
-
-		return m;
-	}
-
 	cmd(
 		"open",
 		"Open link",
@@ -180,7 +180,7 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 				return;
 			}
 
-			const alias = getOpenAliasMap(ctx.profile);
+			const alias = buildOpenAliasMap(ctx.profile);
 			if (alias.has(target)) {
 				const url = alias.get(target);
 				ctx.printLine([t("Opening: "), l(url)], "muted");
@@ -194,7 +194,7 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 			// only complete first argument
 			if (req.argIndex !== 0) return [];
 
-			const alias = getOpenAliasMap(ctx.profile);
+			const alias = buildOpenAliasMap(ctx.profile);
 			const candidates = [...alias.keys()];
 
 			const p = (req.prefix ?? "").toLowerCase();
