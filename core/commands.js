@@ -77,9 +77,11 @@ export function createCommandRegistry({ profile }) {
             return;
         }
         if (item.type === "links") {
+            const padOnly = (str, targetLen) => " ".repeat(Math.max(0, targetLen - str.length));
             const entries = Object.entries(item.items).flatMap(([key, href]) => [
                 t(`${key}: `.padEnd(10, " ")),
-                l(href, key.padEnd(10, " ")),
+                l(href, key),
+                t(padOnly(key, 10)),
                 t(" (or run "),
                 s("accent", `open ${key}`),
                 t(")\n"),
