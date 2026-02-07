@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Terminal-style developer portfolio" />
+    <title>Brad — Terminal Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+<main class="terminal" aria-label="Terminal portfolio">
+    <header class="topbar">
+        <div class="dots" aria-hidden="true">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="title">brad@portfolio: ~</div>
+        <div class="actions">
+            <div class="hint">Type <kbd>help</kbd></div>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false">
+                Light
+            </button>
+        </div>
+    </header>
+
+    <section
+        id="screen"
+        class="screen"
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-atomic="false"
+        aria-label="Terminal output"
+    ></section>
+
+    <nav id="quickLinks" class="quick-links" aria-label="Quick links">
+        <span class="quick-links-label">Shortcuts</span>
+        <div id="quickLinksList" class="quick-links-list"></div>
+    </nav>
+
+    <form id="prompt" class="prompt" autocomplete="off">
+        <span class="ps1" aria-hidden="true">brad@portfolio</span>
+        <span class="sep" aria-hidden="true">:</span>
+        <span class="cwd" aria-hidden="true">~</span>
+        <span class="sep" aria-hidden="true">$</span>
+
+        <label class="sr-only" for="input">Command input</label>
+        <input
+                id="input"
+                type="text"
+                inputmode="text"
+                spellcheck="false"
+                autocapitalize="off"
+                autofocus
+        />
+    </form>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

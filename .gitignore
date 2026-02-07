@@ -1,0 +1,12 @@
+.idea
+*.iml
+out
+gen
+coverage
+node_modules/
+.env
+.cache
+.parcel-cache
+.next
+dist
+.cache/
