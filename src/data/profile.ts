@@ -39,10 +39,10 @@ export const PROFILE: Profile = {
 	],
 	role: "Software Engineer",
 	location: "Yorkshire, UK",
-	email: "you@example.com",
+	email: "you@example.com", // TODO: make this my real email address
 	links: {
-		github: "https://github.com/your-handle",
-		linkedin: "https://www.linkedin.com/in/your-handle",
+		github: "https://github.com/br-watson",
+		linkedin: "https://www.linkedin.com/in/bradleyrwatson",
 	},
 	filePaths: {
 		cv: "./assets/cv.pdf",
@@ -50,39 +50,39 @@ export const PROFILE: Profile = {
 	},
 	bio: [
 		"I build backend systems, pipelines, and cloud infrastructure.",
-		"Current interests: AWS, TypeScript, CI/CD...",
-		"This site is a small fake shell because normal portfolios are a bit boring.",
+		"Current interests: TODO...",
+		"This site is a small fake shell because normal portfolios are kinda boring.",
 	],
 	projects: [
 		{
-			name: "Project Alpha",
-			desc: "Short punchy description. What problem, what stack, what impact.",
-			link: "https://github.com/your-handle/project-alpha",
-			tags: ["TypeScript", "AWS", "CDK"],
+			name: "Terminal Portfolio",
+			desc: "This project! A terminal-based portfolio website, built with TypeScript and HTML.",
+			link: "https://github.com/br-watson/br-watson.github.io",
+			tags: ["TypeScript", "HTML", "CSS"],
 		},
 		{
-			name: "Project Beta",
-			desc: "Another one. Keep it outcome-focused.",
-			link: "https://example.com",
-			tags: ["NestJS", "Postgres"],
+			name: "TODO...",
+			desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+			link: "",
+			tags: ["TODO..."],
 		},
 	],
-	skills: ["TypeScript", "AWS"],
+	skills: ["TypeScript", "AWS", "TODO..."],
 	roles: [
 		{
 			title: "Software Engineer",
-			company: "Tech Company",
+			company: "Sky UK",
 			location: "Leeds, UK",
-			startDate: "Jan 2020",
-			endDate: "Jun 2021",
-			description:
-				"Describe your role and achievements here. Focus on impact and outcomes.",
+			startDate: "Sep 2024",
+			description: "TODO...",
 		},
 		{
-			title: "Software Engineer II",
-			company: "Tech Company 2",
+			title: "Associate Software Engineer",
+			company: "Sky UK",
 			location: "Leeds, UK",
-			startDate: "Jun 2021",
+			startDate: "Sep 2023",
+			endDate: "Sep 2024",
+			description: "TODO...",
 		},
 	],
 };
