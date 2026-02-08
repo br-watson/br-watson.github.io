@@ -103,49 +103,72 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 		"cat <file>",
 		(ctx, args) => {
 			const { t, l, s } = ctx.seg;
+
 			const name = args[0];
 			if (!name) {
 				ctx.printLine("cat: missing file operand", "error");
 				return;
 			}
+
 			const item = ctx.resolveHomeItem(name);
 			if (!item) {
 				ctx.printLine(`cat: ${name}: No such file`, "error");
 				return;
 			}
-			if (item.type === "file") {
-				ctx.printPre(String(item.content), "ok");
-				return;
-			}
-			if (item.type === "link") {
-				ctx.printLine(
-					[
-						t(`${name} -> `),
-						l(item.href),
-						t(" (click me! or run "),
-						s("accent", `open ${name}`),
-						t(")"),
-					],
-					"muted",
-				);
-				return;
-			}
-			if (item.type === "links") {
-				const padOnly = (str: string, targetLen: number) =>
-					" ".repeat(Math.max(0, targetLen - str.length));
 
-				const entries = Object.entries(item.items).flatMap(([key, href]) => [
-					t(`${key}: `.padEnd(10, " ")),
-					l(href, key),
-					t(padOnly(key, 10)),
-					t(" (or run "),
-					s("accent", `open ${key}`),
-					t(")\n"),
-				]);
-				ctx.printLine(entries, "muted");
-				return;
+			switch (item.type) {
+				case "file": {
+					ctx.printPre(String(item.content), "ok");
+					break;
+				}
+				case "link": {
+					ctx.printLine(
+						[
+							t(`${name} -> `),
+							l(item.href),
+							t(" (click me! or run "),
+							s("accent", `open ${name}`),
+							t(")"),
+						],
+						"muted",
+					);
+					break;
+				}
+				case "links": {
+					const padOnly = (str: string, targetLen: number) =>
+						" ".repeat(Math.max(0, targetLen - str.length));
+
+					const entries = Object.entries(item.items).flatMap(([key, href]) => [
+						t(`${key}: `.padEnd(10, " ")),
+						l(href, key),
+						t(padOnly(key, 10)),
+						t(" (or run "),
+						s("accent", `open ${key}`),
+						t(")\n"),
+					]);
+					ctx.printLine(entries, "muted");
+					break;
+				}
+				case "projects": {
+					const entries = item.projects.flatMap((p) => [
+						s("accent", `${p.name}\n`),
+						t(`${p.desc}\n`),
+						...(p.repoLink ? [l(p.repoLink), t("\n")] : [t("")]),
+						...(p.deployedLink ? [l(p.deployedLink), t("\n")] : [t("")]),
+						// tags
+						p.tags && p.tags.length > 0
+							? t(`Tech stack: ${p.tags.join(", ")}\n`)
+							: t(""),
+						t("\n"),
+					]);
+					ctx.printLine(entries, "muted");
+					break;
+				}
+				default: {
+					ctx.printLine(`cat: ${name}: Not a file`, "error");
+					break;
+				}
 			}
-			ctx.printLine(`cat: ${name}: Not a file`, "error");
 		},
 		(ctx, req) => {
 			// only complete first argument

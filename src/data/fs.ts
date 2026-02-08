@@ -1,10 +1,11 @@
-import type { Profile } from "./profile.js";
+import type { Profile, Project } from "./profile.js";
 
 type FsNode =
 	| { type: "dir"; children: Record<string, FsNode> }
 	| { type: "file"; content: string }
 	| { type: "link"; href: string }
-	| { type: "links"; items: Record<string, string> };
+	| { type: "links"; items: Record<string, string> }
+	| { type: "projects"; projects: Project[] };
 
 export type FileSystem = Record<string, FsNode>;
 
@@ -26,13 +27,8 @@ export function buildFs(profile: Profile): FileSystem {
 					content: profile.bio.join("\n"),
 				},
 				"projects.txt": {
-					type: "file",
-					content: profile.projects
-						.map(
-							(p) =>
-								`- ${p.name}\n  ${p.desc}\n  ${p.link}\n  tags: ${p.tags.join(", ")}`,
-						)
-						.join("\n\n"),
+					type: "projects",
+					projects: profile.projects,
 				},
 				"socials.txt": {
 					type: "links",

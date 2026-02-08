@@ -1,3 +1,11 @@
+export interface Project {
+	name: string;
+	desc: string;
+	repoLink?: string;
+	deployedLink?: string;
+	tags: string[];
+}
+
 export interface Profile {
 	name: string;
 	nameAsciiArt?: string[];
@@ -10,12 +18,7 @@ export interface Profile {
 		dissertation: string;
 	};
 	bio: string[];
-	projects: {
-		name: string;
-		desc: string;
-		link: string;
-		tags: string[];
-	}[];
+	projects: Project[];
 	skills: string[];
 	roles: {
 		title: string;
@@ -57,14 +60,15 @@ export const PROFILE: Profile = {
 	projects: [
 		{
 			name: "Terminal Portfolio",
-			desc: "This project! A terminal-based portfolio website, built with TypeScript and HTML.",
-			link: "https://github.com/br-watson/br-watson.github.io",
+			desc: "This project! An interactive terminal-style portfolio built with TypeScript, HTML, and CSS.",
+			repoLink: "https://github.com/br-watson/br-watson.github.io",
+			deployedLink: "https://bwatson.uk",
 			tags: ["TypeScript", "HTML", "CSS"],
 		},
 		{
 			name: "TODO...",
 			desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			link: "",
+			repoLink: "",
 			tags: ["TODO..."],
 		},
 	],
@@ -88,8 +92,6 @@ export const PROFILE: Profile = {
 	],
 	todo: [
 		"Finish writing profile (bio, experience, projects, skills etc.)",
-		"Make projects links clickable",
-		"Allow projects to have multiple links (or a git link and a deployment link)",
 		"Add more commands",
 		"Improve txt files output formatting",
 		"Make actual CV",
