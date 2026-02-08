@@ -19,6 +19,31 @@ interface Command {
 }
 
 export type Commands = Map<string, Command>;
+const COMPLETABLE_CAT_TYPES = new Set([
+	"file",
+	"link",
+	"links",
+	"projects",
+	"education",
+]);
+
+function filterByPrefix(
+	candidates: Iterable<string>,
+	prefix: string,
+): string[] {
+	const lowerPrefix = prefix.toLowerCase();
+	return Array.from(new Set(candidates))
+		.filter((candidate) => candidate.toLowerCase().startsWith(lowerPrefix))
+		.sort();
+}
+
+function completeFirstArg(
+	req: CompletionRequest,
+	candidates: Iterable<string>,
+): string[] {
+	if (req.argIndex !== 0) return [];
+	return filterByPrefix(candidates, req.prefix ?? "");
+}
 
 export function buildOpenAliasMap(profile: Profile) {
 	const aliases = new Map<string, string>();
@@ -198,24 +223,11 @@ export function createCommandRegistry({
 			}
 		},
 		(ctx, req) => {
-			// only complete first argument
-			if (req.argIndex !== 0) return [];
-
-			const candidates = ctx
-				.listHome()
-				.filter(
-					(entry: string) =>
-						ctx.resolveHomeItem(entry)?.type === "file" ||
-						ctx.resolveHomeItem(entry)?.type === "link" ||
-						ctx.resolveHomeItem(entry)?.type === "links" ||
-						ctx.resolveHomeItem(entry)?.type === "projects" ||
-						ctx.resolveHomeItem(entry)?.type === "education",
-				);
-
-			const p = (req.prefix ?? "").toLowerCase();
-			return candidates
-				.filter((c) => String(c).toLowerCase().startsWith(p))
-				.sort();
+			const candidates = ctx.listHome().filter((entry: string) => {
+				const item = ctx.resolveHomeItem(entry);
+				return item ? COMPLETABLE_CAT_TYPES.has(item.type) : false;
+			});
+			return completeFirstArg(req, candidates);
 		},
 	);
 
@@ -251,17 +263,8 @@ export function createCommandRegistry({
 			ctx.printLine(`open: unknown target "${targetRaw}"`, "error");
 		},
 		(ctx, req) => {
-			// only complete first argument
-			if (req.argIndex !== 0) return [];
-
 			const alias = buildOpenAliasMap(ctx.profile);
-			const candidates = [...alias.keys()];
-
-			const p = (req.prefix ?? "").toLowerCase();
-
-			return Array.from(new Set(candidates))
-				.filter((c) => String(c).toLowerCase().startsWith(p))
-				.sort();
+			return completeFirstArg(req, alias.keys());
 		},
 	);
 
@@ -316,16 +319,7 @@ export function createCommandRegistry({
 			ctx.printLine(`theme: set to "${next}"`, "muted");
 		},
 		(_, req) => {
-			// only complete first argument
-			if (req.argIndex !== 0) return [];
-
-			const candidates = ["dark", "light", "toggle"];
-
-			const p = (req.prefix ?? "").toLowerCase();
-
-			return Array.from(new Set(candidates))
-				.filter((c) => String(c).toLowerCase().startsWith(p))
-				.sort();
+			return completeFirstArg(req, ["dark", "light", "toggle"]);
 		},
 	);
 
