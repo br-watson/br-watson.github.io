@@ -149,7 +149,6 @@ export const PROFILE: Profile = {
 		"Add more commands",
 		"Improve txt files output formatting",
 		"Make actual CV",
-		"Add way for mobile to access command history and autocomplete",
 		"Write README",
 		"Make sure accessibility is good",
 		"Make sure performance is good",
