@@ -6,6 +6,21 @@ export interface Project {
 	tags: string[];
 }
 
+export interface Education {
+	qualification: string;
+	institution: string;
+	location: string;
+	startDate: string;
+	endDate: string;
+	grade: string;
+	description?: string;
+	tags?: string[];
+	dissertation?: {
+		title: string;
+		link: string;
+	};
+}
+
 export interface Profile {
 	name: string;
 	nameAsciiArt?: string[];
@@ -20,6 +35,7 @@ export interface Profile {
 	bio: string[];
 	projects: Project[];
 	skills: string[];
+	education: Education[];
 	roles: {
 		title: string;
 		company: string;
@@ -73,6 +89,44 @@ export const PROFILE: Profile = {
 		},
 	],
 	skills: ["TypeScript", "AWS", "TODO..."],
+	education: [
+		{
+			qualification: "Master of Mathematics (MMath)",
+			institution: "Durham University",
+			location: "Durham, UK",
+			startDate: "2018",
+			endDate: "2022",
+			grade: "1:1 (Honours)",
+			description:
+				"Specialised in mathematical analysis, geometry, and algebra. Dissertation on isometries of Riemannian manifolds.",
+			tags: [
+				"Mathematical analysis",
+				"Geometry",
+				"Algebra",
+				"Calculus",
+				"Linear algebra",
+				"Partial differential equations",
+			],
+			dissertation: {
+				title: "Isometries of Riemannian Manifolds",
+				link: "./assets/diss.pdf",
+			},
+		},
+		{
+			qualification: "A-Levels",
+			institution: "Notre Dame Sixth Form College",
+			location: "Leeds, UK",
+			startDate: "2016",
+			endDate: "2018",
+			grade: "A*AAA",
+			tags: [
+				"Mathematics",
+				"Further Mathematics",
+				"Computer Science",
+				"Chemistry",
+			],
+		},
+	],
 	roles: [
 		{
 			title: "Software Engineer",
@@ -95,7 +149,6 @@ export const PROFILE: Profile = {
 		"Add more commands",
 		"Improve txt files output formatting",
 		"Make actual CV",
-		"Add education section",
 		"Add way for mobile to access command history and autocomplete",
 		"Write README",
 		"Make sure accessibility is good",

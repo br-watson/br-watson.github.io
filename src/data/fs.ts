@@ -1,11 +1,12 @@
-import type { Profile, Project } from "./profile.js";
+import type { Education, Profile, Project } from "./profile.js";
 
 type FsNode =
 	| { type: "dir"; children: Record<string, FsNode> }
 	| { type: "file"; content: string }
 	| { type: "link"; href: string }
 	| { type: "links"; items: Record<string, string> }
-	| { type: "projects"; projects: Project[] };
+	| { type: "projects"; projects: Project[] }
+	| { type: "education"; education: Education[] };
 
 export type FileSystem = Record<string, FsNode>;
 
@@ -37,6 +38,10 @@ export function buildFs(profile: Profile): FileSystem {
 				"skills.txt": {
 					type: "file",
 					content: profile.skills.join(", "),
+				},
+				"education.txt": {
+					type: "education",
+					education: profile.education,
 				},
 				"roles.txt": {
 					type: "file",

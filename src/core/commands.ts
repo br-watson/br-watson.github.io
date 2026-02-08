@@ -164,6 +164,27 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 					ctx.printLine(entries, "muted");
 					break;
 				}
+				case "education": {
+					const entries = item.education.flatMap((e) => [
+						s("accent", `${e.qualification} - ${e.institution}\n`),
+						t(`${e.location} | ${e.startDate} - ${e.endDate} | ${e.grade}\n`),
+						e.description ? t(`${e.description}\n`) : t(""),
+						...(e.dissertation
+							? [
+									t("Dissertation: "),
+									l(e.dissertation.link, e.dissertation.title),
+									t("\n"),
+								]
+							: [t("")]),
+						// tags
+						e.tags && e.tags.length > 0
+							? t(`Tags: ${e.tags.join(", ")}\n`)
+							: t(""),
+						t("\n"),
+					]);
+					ctx.printLine(entries, "muted");
+					break;
+				}
 				default: {
 					ctx.printLine(`cat: ${name}: Not a file`, "error");
 					break;
@@ -180,7 +201,9 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 					(entry: string) =>
 						ctx.resolveHomeItem(entry)?.type === "file" ||
 						ctx.resolveHomeItem(entry)?.type === "link" ||
-						ctx.resolveHomeItem(entry)?.type === "links",
+						ctx.resolveHomeItem(entry)?.type === "links" ||
+						ctx.resolveHomeItem(entry)?.type === "projects" ||
+						ctx.resolveHomeItem(entry)?.type === "education",
 				);
 
 			const p = (req.prefix ?? "").toLowerCase();
@@ -248,6 +271,9 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 	);
 	cmd("skills", "List my skills", "skills", (ctx) =>
 		commands.get("cat")?.execute(ctx, ["skills.txt"]),
+	);
+	cmd("education", "List my education", "education", (ctx) =>
+		commands.get("cat")?.execute(ctx, ["education.txt"]),
 	);
 	cmd("roles", "List my roles and experience", "roles", (ctx) =>
 		commands.get("cat")?.execute(ctx, ["roles.txt"]),
