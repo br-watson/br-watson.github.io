@@ -158,16 +158,20 @@ export function createTerminal({
 			s("banner-border", bottom),
 		];
 
-		printLine(banner, "banner");
+		printLine(banner, "banner", false);
 	}
 
 	function clamp(n: number, min: number, max: number) {
 		return Math.max(min, Math.min(max, n));
 	}
 
-	function printLine(content: string | Segment[], className = "ok") {
+	function printLine(
+		content: string | Segment[],
+		className = "ok",
+		wrapText: boolean = true,
+	) {
 		const segments = Array.isArray(content) ? content : [t(String(content))];
-		renderer.printLine(segments, className);
+		renderer.printLine(segments, className, wrapText);
 	}
 
 	function printPre(text: string, className = "ok") {

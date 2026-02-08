@@ -1,7 +1,11 @@
 import type { Segment } from "../core/terminal";
 
 export interface Renderer {
-	printLine: (segments: Segment[], className: string) => void;
+	printLine: (
+		segments: Segment[],
+		className: string,
+		wrapText: boolean,
+	) => void;
 	printPre: (text: string, className: string) => void;
 	clear: () => void;
 	scrollToBottom: () => void;
@@ -75,14 +79,18 @@ export function createDomRenderer({
 		return frag;
 	}
 
-	function printLine(segments: Segment[], className = "ok"): void {
+	function printLine(
+		segments: Segment[],
+		className = "ok",
+		wrapText: boolean = true,
+	): void {
 		const block = document.createElement("div");
 		block.className = "block";
-
-		block.classList.add("wrap-text");
+		if (wrapText) block.classList.add("wrap-text");
 
 		const line = document.createElement("div");
-		line.className = `line ${className} wrap-text`;
+		line.className = `line ${className}`;
+		if (wrapText) line.classList.add("wrap-text");
 		line.appendChild(buildInlineContent(segments));
 
 		block.appendChild(line);
