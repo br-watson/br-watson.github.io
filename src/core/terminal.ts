@@ -210,7 +210,7 @@ export function createTerminal({
 				if (index) segs.push(t("   "));
 				segs.push(s("accent", value));
 			});
-			printLine(segs, "muted wrap-desktop");
+			printLine(segs, "muted");
 			renderer.scrollToBottom();
 		},
 	});

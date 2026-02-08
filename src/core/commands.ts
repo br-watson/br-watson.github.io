@@ -179,7 +179,7 @@ export function createCommandRegistry({
 						s("accent", `open ${key}`),
 						t(")\n"),
 					]);
-					ctx.printLine(entries, "muted wrap-desktop");
+					ctx.printLine(entries, "muted");
 					break;
 				}
 				case "projects": {
@@ -193,7 +193,7 @@ export function createCommandRegistry({
 							: t(""),
 						t("\n"),
 					]);
-					ctx.printLine(entries, "muted wrap-desktop");
+					ctx.printLine(entries, "muted");
 					break;
 				}
 				case "education": {
@@ -213,7 +213,7 @@ export function createCommandRegistry({
 							: t(""),
 						t("\n"),
 					]);
-					ctx.printLine(entries, "muted wrap-desktop");
+					ctx.printLine(entries, "muted");
 					break;
 				}
 				default: {

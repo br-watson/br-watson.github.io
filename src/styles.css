@@ -211,17 +211,15 @@ body {
 	overflow-wrap: normal;
 }
 
-@media (min-width: 641px) {
-	.block.wrap-desktop {
-		width: 100%;
-	}
+.block.wrap-text {
+	width: 100%;
+}
 
-	.block.wrap-desktop .line.wrap-desktop {
-		width: 100%;
-		white-space: pre-wrap;
-		overflow-wrap: anywhere;
-		word-break: break-word;
-	}
+.block.wrap-text .line.wrap-text {
+	width: 100%;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .pre {
