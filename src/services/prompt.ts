@@ -1,6 +1,7 @@
 import type { Renderer } from "../ui/domRenderer.js";
 
 const MAX_MOBILE_SUGGESTIONS = 6;
+
 type MobileSuggestionType = "history" | "completion";
 
 interface TerminalLike {
@@ -24,6 +25,93 @@ interface PromptOptions {
 	enableMobileAssist?: boolean;
 }
 
+interface MobileAssistElements {
+	container: HTMLElement;
+	suggestions: HTMLElement;
+	enter: HTMLButtonElement;
+}
+
+interface MobileSuggestionSet {
+	type: MobileSuggestionType;
+	values: string[];
+}
+
+function resolveMobileAssistElements({
+	enableMobileAssist,
+	mobileAssist,
+	mobileSuggestions,
+	mobileEnter,
+}: Pick<
+	PromptOptions,
+	"enableMobileAssist" | "mobileAssist" | "mobileSuggestions" | "mobileEnter"
+>): MobileAssistElements | null {
+	if (!enableMobileAssist) return null;
+	if (!(mobileAssist instanceof HTMLElement)) return null;
+	if (!(mobileSuggestions instanceof HTMLElement)) return null;
+	if (!(mobileEnter instanceof HTMLButtonElement)) return null;
+	return {
+		container: mobileAssist,
+		suggestions: mobileSuggestions,
+		enter: mobileEnter,
+	};
+}
+
+function moveCaretToEnd(input: HTMLInputElement): void {
+	requestAnimationFrame(() => {
+		input.selectionStart = input.selectionEnd = input.value.length;
+	});
+}
+
+function setInputValue(input: HTMLInputElement, value: string): void {
+	input.value = value;
+	moveCaretToEnd(input);
+}
+
+function buildMobileSuggestionButton(
+	value: string,
+	type: MobileSuggestionType,
+): HTMLButtonElement {
+	const suggestion = document.createElement("button");
+	suggestion.type = "button";
+	suggestion.className = "mobile-suggestion";
+	suggestion.dataset.kind = type;
+	suggestion.dataset.value = value;
+	suggestion.setAttribute("aria-label", `Insert ${value}`);
+	suggestion.title = value;
+	suggestion.textContent = value;
+	return suggestion;
+}
+
+function getMobileSuggestions(
+	inputValue: string,
+	terminal: TerminalLike,
+): MobileSuggestionSet {
+	const isHistoryMode = inputValue.trim().length === 0;
+	const type: MobileSuggestionType = isHistoryMode ? "history" : "completion";
+	const sourceValues = isHistoryMode
+		? terminal.listRecentHistory(MAX_MOBILE_SUGGESTIONS)
+		: terminal.listCompletions(inputValue);
+
+	return {
+		type,
+		values: sourceValues.slice(0, MAX_MOBILE_SUGGESTIONS),
+	};
+}
+
+function applyMobileSuggestion(
+	input: HTMLInputElement,
+	value: string,
+	type: MobileSuggestionType | undefined,
+): void {
+	if (type === "completion") {
+		const nextValue = /\s$/.test(value) ? value : `${value} `;
+		setInputValue(input, nextValue);
+		return;
+	}
+
+	setInputValue(input, value);
+}
+
 export function createPromptController({
 	form,
 	input,
@@ -34,69 +122,25 @@ export function createPromptController({
 	mobileEnter,
 	enableMobileAssist = false,
 }: PromptOptions) {
-	const mobileAssistEl =
-		enableMobileAssist && mobileAssist instanceof HTMLElement
-			? mobileAssist
-			: null;
-	const mobileSuggestionsEl =
-		enableMobileAssist && mobileSuggestions instanceof HTMLElement
-			? mobileSuggestions
-			: null;
-	const mobileEnterEl =
-		enableMobileAssist && mobileEnter instanceof HTMLButtonElement
-			? mobileEnter
-			: null;
-	const hasMobileAssist =
-		mobileAssistEl !== null &&
-		mobileSuggestionsEl !== null &&
-		mobileEnterEl !== null;
+	const mobileAssistElements = resolveMobileAssistElements({
+		enableMobileAssist,
+		mobileAssist,
+		mobileSuggestions,
+		mobileEnter,
+	});
 
 	function focus(): void {
 		input.focus({ preventScroll: true });
 	}
 
-	function moveCaretToEnd(): void {
-		requestAnimationFrame(() => {
-			input.selectionStart = input.selectionEnd = input.value.length;
-		});
-	}
-
-	function setInputValue(value: string): void {
-		input.value = value;
-		moveCaretToEnd();
-	}
-
-	function buildMobileSuggestion(
-		value: string,
-		suggestionType: MobileSuggestionType,
-	): HTMLButtonElement {
-		const suggestion = document.createElement("button");
-		suggestion.type = "button";
-		suggestion.className = "mobile-suggestion";
-		suggestion.dataset.kind = suggestionType;
-		suggestion.dataset.value = value;
-		suggestion.setAttribute("aria-label", `Insert ${value}`);
-		suggestion.title = value;
-		suggestion.textContent = value;
-		return suggestion;
-	}
-
 	function refreshMobileAssist(): void {
-		if (!hasMobileAssist || !mobileSuggestionsEl) return;
+		if (!mobileAssistElements) return;
 
-		const isHistoryMode = input.value.trim().length === 0;
-		const sourceValues = isHistoryMode
-			? terminal.listRecentHistory(MAX_MOBILE_SUGGESTIONS)
-			: terminal.listCompletions(input.value);
-		const chipKind: MobileSuggestionType = isHistoryMode
-			? "history"
-			: "completion";
-
-		const values = sourceValues.slice(0, MAX_MOBILE_SUGGESTIONS);
-		mobileSuggestionsEl.replaceChildren(
-			...values.map((value) => buildMobileSuggestion(value, chipKind)),
+		const { type, values } = getMobileSuggestions(input.value, terminal);
+		mobileAssistElements.suggestions.replaceChildren(
+			...values.map((value) => buildMobileSuggestionButton(value, type)),
 		);
-		mobileSuggestionsEl.hidden = values.length === 0;
+		mobileAssistElements.suggestions.hidden = values.length === 0;
 	}
 
 	async function submitLine({
@@ -123,55 +167,56 @@ export function createPromptController({
 		focus();
 	}
 
-	form.addEventListener("submit", (e) => {
-		e.preventDefault();
-		void submitLine();
-	});
-
-	input.addEventListener("input", () => {
-		refreshMobileAssist();
-	});
-
-	input.addEventListener("keydown", (e) => {
-		if (e.altKey || e.ctrlKey || e.metaKey) return;
-		let changed = false;
-
-		if (e.key === "ArrowUp") {
+	function bindFormSubmit(): void {
+		form.addEventListener("submit", (e) => {
 			e.preventDefault();
-			const next = terminal.historyUp();
-			if (next === null) return;
-			setInputValue(next);
-			changed = true;
-		}
+			void submitLine();
+		});
+	}
 
-		if (e.key === "ArrowDown") {
-			e.preventDefault();
-			const next = terminal.historyDown();
-			if (next === null) return;
-			setInputValue(next);
-			changed = true;
-		}
+	function bindInputHandlers(): void {
+		input.addEventListener("input", () => {
+			refreshMobileAssist();
+		});
 
-		if (e.key === "Tab") {
-			if (e.shiftKey) return;
-			e.preventDefault();
-			setInputValue(terminal.autocomplete(input.value));
-			changed = true;
-		}
+		input.addEventListener("keydown", (e) => {
+			if (e.altKey || e.ctrlKey || e.metaKey) return;
+			let changed = false;
 
-		if (changed) refreshMobileAssist();
-	});
+			if (e.key === "ArrowUp") {
+				e.preventDefault();
+				const next = terminal.historyUp();
+				if (next === null) return;
+				setInputValue(input, next);
+				changed = true;
+			}
 
-	if (
-		hasMobileAssist &&
-		mobileAssistEl &&
-		mobileSuggestionsEl &&
-		mobileEnterEl
-	) {
-		mobileAssistEl.hidden = false;
+			if (e.key === "ArrowDown") {
+				e.preventDefault();
+				const next = terminal.historyDown();
+				if (next === null) return;
+				setInputValue(input, next);
+				changed = true;
+			}
 
-		mobileSuggestionsEl.addEventListener("click", (event) => {
-			const target = event.target;
+			if (e.key === "Tab") {
+				if (e.shiftKey) return;
+				e.preventDefault();
+				setInputValue(input, terminal.autocomplete(input.value));
+				changed = true;
+			}
+
+			if (changed) refreshMobileAssist();
+		});
+	}
+
+	function bindMobileAssistHandlers(): void {
+		if (!mobileAssistElements) return;
+
+		mobileAssistElements.container.hidden = false;
+
+		mobileAssistElements.suggestions.addEventListener("click", (e) => {
+			const target = e.target;
 			if (!(target instanceof Element)) return;
 
 			const button = target.closest("button[data-value]");
@@ -180,20 +225,21 @@ export function createPromptController({
 			const value = button.dataset.value;
 			if (!value) return;
 
-			const chipKind = button.dataset.kind as MobileSuggestionType | undefined;
-			if (chipKind === "completion") {
-				const nextValue = /\s$/.test(value) ? value : `${value} `;
-				setInputValue(nextValue);
-			} else {
-				setInputValue(value);
-			}
+			const type = button.dataset.kind as MobileSuggestionType | undefined;
+			applyMobileSuggestion(input, value, type);
 			refreshMobileAssist();
 		});
 
-		mobileEnterEl.addEventListener("click", () => {
+		mobileAssistElements.enter.addEventListener("click", () => {
 			void submitLine({ blurAfterRun: true });
 		});
-	} else if (mobileAssist instanceof HTMLElement) {
+	}
+
+	bindFormSubmit();
+	bindInputHandlers();
+	bindMobileAssistHandlers();
+
+	if (!mobileAssistElements && mobileAssist instanceof HTMLElement) {
 		mobileAssist.hidden = true;
 	}
 
