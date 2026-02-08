@@ -1,3 +1,4 @@
+import type { FsNode } from "../../data/fs";
 import type { Context } from "../terminal.js";
 import { completeFirstArg } from "./completion.js";
 import type { RegisterCommand } from "./types.js";
@@ -11,9 +12,7 @@ const COMPLETABLE_CAT_TYPES = new Set([
 	"education",
 ]);
 
-type HomeItem = NonNullable<ReturnType<Context["resolveHomeItem"]>>;
-
-function renderBio(ctx: Context, item: Extract<HomeItem, { type: "bio" }>) {
+function renderBio(ctx: Context, item: Extract<FsNode, { type: "bio" }>) {
 	const { t, s } = ctx.seg;
 	const entries = item.lines.flatMap((line, index) => [
 		t(line),
@@ -22,14 +21,14 @@ function renderBio(ctx: Context, item: Extract<HomeItem, { type: "bio" }>) {
 	ctx.printLine([s("accent", "About\n"), ...entries], "muted");
 }
 
-function renderFile(ctx: Context, item: Extract<HomeItem, { type: "file" }>) {
+function renderFile(ctx: Context, item: Extract<FsNode, { type: "file" }>) {
 	ctx.printPre(String(item.content), "ok");
 }
 
 function renderLink(
 	ctx: Context,
 	name: string,
-	item: Extract<HomeItem, { type: "link" }>,
+	item: Extract<FsNode, { type: "link" }>,
 ) {
 	const { t, l, s } = ctx.seg;
 	ctx.printLine(
@@ -44,7 +43,7 @@ function renderLink(
 	);
 }
 
-function renderLinks(ctx: Context, item: Extract<HomeItem, { type: "links" }>) {
+function renderLinks(ctx: Context, item: Extract<FsNode, { type: "links" }>) {
 	const { t, l, s } = ctx.seg;
 	const padOnly = (str: string, targetLen: number) =>
 		" ".repeat(Math.max(0, targetLen - str.length));
@@ -62,7 +61,7 @@ function renderLinks(ctx: Context, item: Extract<HomeItem, { type: "links" }>) {
 
 function renderProjects(
 	ctx: Context,
-	item: Extract<HomeItem, { type: "projects" }>,
+	item: Extract<FsNode, { type: "projects" }>,
 ) {
 	const { t, l, s } = ctx.seg;
 	const entries = item.projects.flatMap((p) => [
@@ -80,7 +79,7 @@ function renderProjects(
 
 function renderEducation(
 	ctx: Context,
-	item: Extract<HomeItem, { type: "education" }>,
+	item: Extract<FsNode, { type: "education" }>,
 ) {
 	const { t, l, s } = ctx.seg;
 	const entries = item.education.flatMap((e) => [
@@ -100,7 +99,7 @@ function renderEducation(
 	ctx.printLine(entries, "muted");
 }
 
-function renderHomeItem(ctx: Context, name: string, item: HomeItem) {
+function renderHomeItem(ctx: Context, name: string, item: FsNode) {
 	switch (item.type) {
 		case "bio":
 			renderBio(ctx, item);

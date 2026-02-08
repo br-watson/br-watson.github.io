@@ -1,6 +1,6 @@
 import type { Education, Profile, Project } from "./profile.js";
 
-type FsNode =
+export type FsNode =
 	| { type: "dir"; children: Record<string, FsNode> }
 	| { type: "file"; content: string }
 	| { type: "link"; href: string }
