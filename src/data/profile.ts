@@ -82,9 +82,22 @@ export const PROFILE: Profile = {
 			tags: ["TypeScript", "HTML", "CSS"],
 		},
 		{
+			name: "Darts Score Tracker",
+			desc: "All the darts trackers my friends and I could find were either too basic or couldn't handle more than 4 players, so I built this simple one to track our games and stats.",
+			repoLink: "https://github.com/br-watson/darts-games",
+			deployedLink: "https://bwatson.uk/darts-games",
+			tags: ["TypeScript", "React", "Next.js", "Tailwind CSS"],
+		},
+		{
+			name: "Planning Poker App",
+			desc: "Built a free, no-login planning poker app for my team's sprint refinements after existing tools were paid or lacked custom decks. It supports multiple rooms, custom card sets, and real-time updates.",
+			deployedLink: "https://poker.bwatson.uk/",
+			tags: ["TypeScript", "React", "Tailwind CSS", "Firebase"],
+		},
+		{
 			name: "TODO...",
 			desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			repoLink: "",
+			repoLink: "https://github.com/",
 			tags: ["TODO..."],
 		},
 	],
