@@ -229,6 +229,25 @@ body {
 .block .error {
 	color: var(--error);
 }
+.block .banner {
+	font-size: 1.05rem;
+	line-height: 1.3;
+	color: var(--accent);
+}
+
+.block .banner .banner-border,
+.block .banner .banner-text {
+	text-shadow: 0 0 14px rgba(126, 231, 135, 0.22);
+}
+
+:root[data-theme="light"] .block .banner .banner-border {
+	text-shadow: 0 0 10px rgba(5, 158, 0, 0.12);
+}
+
+:root[data-theme="light"] .block .banner .banner-text {
+	color: var(--text);
+	text-shadow: none;
+}
 
 a {
 	color: var(--link);
