@@ -1,5 +1,5 @@
 {
-	"exclude": ["livereload.js"],
+	"exclude": ["livereload.js", "dist/**/*"],
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 
