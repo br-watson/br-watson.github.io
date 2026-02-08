@@ -69,9 +69,9 @@ export const PROFILE: Profile = {
 		dissertation: "./assets/diss.pdf",
 	},
 	bio: [
-		"I build backend systems, pipelines, and cloud infrastructure.",
-		"Current interests: TODO...",
-		"This site is a small fake shell because normal portfolios are kinda boring.",
+		"Software engineer specializing in backend systems, cloud platforms, CI/CD automation, and end-to-end data pipelines, building reliable, scalable production systems.",
+		"Current interests: distributed systems design, event-driven data pipelines, observability, CI/CD, and developer tooling for cloud-native backends.",
+		"This site is a small terminal-style portfolio because standard portfolio sites are kinda boring.",
 	],
 	projects: [
 		{
@@ -109,7 +109,7 @@ export const PROFILE: Profile = {
 			location: "Durham, UK",
 			startDate: "2018",
 			endDate: "2022",
-			grade: "1:1 (Honours)",
+			grade: "First Class Honours (1st)",
 			description:
 				"Specialised in mathematical analysis, geometry, and algebra. Dissertation on isometries of Riemannian manifolds.",
 			tags: [
