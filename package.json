@@ -1,8 +1,6 @@
 {
 	"name": "br-watson.github.io",
 	"version": "1.0.0",
-	"description": "br-watson.github.io",
-	"main": "index.html",
 	"homepage": "https://bwatson.uk",
 	"scripts": {
 		"format": "biome format",
@@ -15,21 +13,19 @@
 		"clean": "rm -rf dist && mkdir -p dist",
 		"typecheck": "tsc --noEmit",
 		"copy": "cp -r src/index.html src/styles.css src/assets dist && cp CNAME dist/CNAME",
-		"copy:dev": "cp -r src/assets dist && cp CNAME dist/CNAME",
+		"copy:dev": "cp -r src/assets dist",
 
-		"build:js:dev": "esbuild src/main.ts --bundle --format=esm --target=es2020 --sourcemap --outfile=dist/main.js",
+		"build:dev": "esbuild src/main.ts --bundle --format=esm --target=es2020 --sourcemap --outfile=dist/main.js",
 		"serve:dev": "esbuild src/main.ts src/styles.css src/index.html --bundle --format=esm --target=es2020 --sourcemap --outdir=dist --inject:livereload.js --loader:.html=copy --loader:.css=copy --servedir=dist --watch",
 		"dev": "pnpm run clean && pnpm run copy:dev && pnpm run serve:dev",
 
-		"build:js:prod": "esbuild src/main.ts --bundle --format=esm --target=es2020 --minify --outfile=dist/main.js",
-		"build": "pnpm run clean && pnpm run typecheck && pnpm run copy && pnpm run build:js:prod",
+		"build:prod": "esbuild src/main.ts --bundle --format=esm --target=es2020 --minify --outfile=dist/main.js",
+		"build": "pnpm run clean && pnpm run typecheck && pnpm run check && pnpm run copy && pnpm run build:prod",
 
 		"predeploy": "pnpm run build",
 		"deploy": "gh-pages -d dist"
 	},
-	"keywords": [],
 	"author": "Bradley Watson",
-	"license": "ISC",
 	"packageManager": "pnpm@10.29.1+sha512.48dae233635a645768a3028d19545cacc1688639eeb1f3734e42d6d6b971afbf22aa1ac9af52a173d9c3a20c15857cfa400f19994d79a2f626fcc73fccda9bbc",
 	"devDependencies": {
 		"@biomejs/biome": "2.3.14",
