@@ -9,9 +9,33 @@ import { createToast } from "./services/toast.js";
 import { createDomRenderer } from "./ui/domRenderer.js";
 import { setupQuickLinks } from "./ui/quickLinks.js";
 
-const screen = document.getElementById("screen");
-const form = document.getElementById("prompt") as HTMLFormElement;
-const input = document.getElementById("input") as HTMLInputElement;
+function requireElement<T extends Element>(
+	value: Element | null,
+	isExpected: (element: Element) => element is T,
+	errorMessage: string,
+): T {
+	if (!value || !isExpected(value)) {
+		throw new Error(errorMessage);
+	}
+
+	return value;
+}
+
+const screen = requireElement(
+	document.getElementById("screen"),
+	(element): element is HTMLElement => element instanceof HTMLElement,
+	"Screen element not found.",
+);
+const form = requireElement(
+	document.getElementById("prompt"),
+	(element): element is HTMLFormElement => element instanceof HTMLFormElement,
+	"Prompt form element not found.",
+);
+const input = requireElement(
+	document.getElementById("input"),
+	(element): element is HTMLInputElement => element instanceof HTMLInputElement,
+	"Prompt input element not found.",
+);
 const themeToggle = document.getElementById("themeToggle");
 const toastEl = document.getElementById("toast");
 const title = document.querySelector(".title");
@@ -35,10 +59,6 @@ const { controller: themeController, applyInitialTheme } =
 		toast,
 	});
 const openUrl = createSafeOpener(toast);
-
-if (!screen) {
-	throw new Error("Screen element not found.");
-}
 
 const renderer = createDomRenderer({ screen });
 const { commands } = createCommandRegistry({
