@@ -6,7 +6,8 @@ type FsNode =
 	| { type: "link"; href: string }
 	| { type: "links"; items: Record<string, string> }
 	| { type: "projects"; projects: Project[] }
-	| { type: "education"; education: Education[] };
+	| { type: "education"; education: Education[] }
+	| { type: "bio"; lines: string[] };
 
 export type FileSystem = Record<string, FsNode>;
 
@@ -24,8 +25,8 @@ export function buildFs(profile: Profile): FileSystem {
 					].join("\n"),
 				},
 				"bio.txt": {
-					type: "file",
-					content: profile.bio.join("\n"),
+					type: "bio",
+					lines: profile.bio,
 				},
 				"projects.txt": {
 					type: "projects",

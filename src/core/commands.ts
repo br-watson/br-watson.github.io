@@ -21,6 +21,7 @@ interface Command {
 export type Commands = Map<string, Command>;
 const COMPLETABLE_CAT_TYPES = new Set([
 	"file",
+	"bio",
 	"link",
 	"links",
 	"projects",
@@ -214,6 +215,14 @@ export function createCommandRegistry({
 						t("\n"),
 					]);
 					ctx.printLine(entries, "muted");
+					break;
+				}
+				case "bio": {
+					const entries = item.lines.flatMap((line, index) => [
+						t(line),
+						...(index < item.lines.length - 1 ? [t("\n\n")] : []),
+					]);
+					ctx.printLine([s("accent", "About\n"), ...entries], "muted");
 					break;
 				}
 				default: {
