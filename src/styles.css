@@ -372,6 +372,163 @@ a:hover {
 	border-color: rgba(5, 158, 0, 0.5);
 	background: rgba(5, 158, 0, 0.12);
 }
+
+.mobile-assist {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	gap: clamp(8px, 1.2vw, 10px);
+	padding: clamp(5px, 1vw, 6px) clamp(12px, 1.8vw, 14px);
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	background: rgba(0, 0, 0, 0.14);
+	min-width: 0;
+	overflow: hidden;
+}
+
+.mobile-assist[hidden] {
+	display: none;
+}
+
+.mobile-enter {
+	font: inherit;
+	font-size: clamp(11px, 1.2vw, 12px);
+	color: var(--accent);
+	border: 1px solid rgba(126, 231, 135, 0.55);
+	border-bottom-color: rgba(126, 231, 135, 0.38);
+	background: rgba(126, 231, 135, 0.12);
+	padding: 4px 12px;
+	border-radius: 999px;
+	cursor: pointer;
+	white-space: nowrap;
+	flex: 0 0 auto;
+	justify-self: end;
+	transition:
+		color 120ms ease,
+		border-color 120ms ease,
+		background 120ms ease;
+}
+
+.mobile-enter:hover {
+	color: var(--text);
+	border-color: rgba(126, 231, 135, 0.7);
+	background: rgba(126, 231, 135, 0.2);
+}
+
+.mobile-enter:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+.mobile-suggestions {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 8px;
+	min-width: 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 1px 12px 1px 2px;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+	-webkit-overflow-scrolling: touch;
+	scroll-padding-inline: 12px;
+	touch-action: pan-x;
+}
+
+.mobile-suggestions[hidden] {
+	display: none;
+}
+
+.mobile-suggestions::-webkit-scrollbar {
+	height: 8px;
+}
+
+.mobile-suggestions::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.mobile-suggestions::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.18);
+	border-radius: 999px;
+}
+
+.mobile-suggestion {
+	font: inherit;
+	font-size: clamp(11px, 1.2vw, 12px);
+	color: var(--muted);
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	border-bottom-color: rgba(255, 255, 255, 0.1);
+	background: rgba(255, 255, 255, 0.03);
+	padding: 4px 10px;
+	border-radius: 999px;
+	cursor: pointer;
+	white-space: nowrap;
+	flex: 0 0 auto;
+	transition:
+		color 120ms ease,
+		border-color 120ms ease,
+		background 120ms ease;
+}
+
+.mobile-suggestion[data-kind="completion"] {
+	color: var(--text);
+	border-color: rgba(126, 231, 135, 0.32);
+	border-bottom-color: rgba(126, 231, 135, 0.24);
+	background: rgba(126, 231, 135, 0.08);
+}
+
+.mobile-suggestion:hover {
+	color: var(--text);
+	border-color: rgba(126, 231, 135, 0.6);
+	background: rgba(126, 231, 135, 0.1);
+}
+
+.mobile-suggestion[data-kind="completion"]:hover {
+	border-color: rgba(126, 231, 135, 0.68);
+	background: rgba(126, 231, 135, 0.14);
+}
+
+.mobile-suggestion:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+:root[data-theme="light"] .mobile-assist {
+	border-top: 1px solid rgba(34, 42, 47, 0.18);
+	background: rgba(227, 220, 197, 0.9);
+}
+
+:root[data-theme="light"] .mobile-enter {
+	border: 1px solid rgba(5, 158, 0, 0.42);
+	border-bottom-color: rgba(5, 158, 0, 0.28);
+	background: rgba(5, 158, 0, 0.12);
+}
+
+:root[data-theme="light"] .mobile-enter:hover {
+	border-color: rgba(5, 158, 0, 0.58);
+	background: rgba(5, 158, 0, 0.2);
+}
+
+:root[data-theme="light"] .mobile-suggestion {
+	border: 1px solid rgba(34, 42, 47, 0.24);
+	border-bottom-color: rgba(34, 42, 47, 0.16);
+	background: rgba(34, 42, 47, 0.08);
+}
+
+:root[data-theme="light"] .mobile-suggestion[data-kind="completion"] {
+	border-color: rgba(5, 158, 0, 0.35);
+	border-bottom-color: rgba(5, 158, 0, 0.24);
+	background: rgba(5, 158, 0, 0.13);
+}
+
+:root[data-theme="light"] .mobile-suggestion:hover {
+	border-color: rgba(5, 158, 0, 0.5);
+	background: rgba(5, 158, 0, 0.12);
+}
+
+:root[data-theme="light"] .mobile-suggestion[data-kind="completion"]:hover {
+	border-color: rgba(5, 158, 0, 0.56);
+	background: rgba(5, 158, 0, 0.18);
+}
 .prompt {
 	display: flex;
 	gap: clamp(6px, 1.1vw, 8px);

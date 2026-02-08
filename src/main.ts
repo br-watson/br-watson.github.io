@@ -18,6 +18,9 @@ const title = document.querySelector(".title");
 const ps1 = document.querySelector(".ps1");
 const quickLinks = document.getElementById("quickLinks");
 const quickLinksList = document.getElementById("quickLinksList");
+const mobileAssist = document.getElementById("mobileAssist");
+const mobileSuggestions = document.getElementById("mobileSuggestions");
+const mobileEnter = document.getElementById("mobileEnter");
 const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 const SHELL_ID = "brad@portfolio";
@@ -38,7 +41,10 @@ if (!screen) {
 }
 
 const renderer = createDomRenderer({ screen });
-const { commands } = createCommandRegistry({ profile: PROFILE });
+const { commands } = createCommandRegistry({
+	profile: PROFILE,
+	isMobile: prefersCoarsePointer,
+});
 const terminal = createTerminal({
 	renderer,
 	profile: PROFILE,
@@ -48,7 +54,16 @@ const terminal = createTerminal({
 	openUrl,
 });
 
-const prompt = createPromptController({ form, input, terminal, renderer });
+const prompt = createPromptController({
+	form,
+	input,
+	terminal,
+	renderer,
+	mobileAssist,
+	mobileSuggestions,
+	mobileEnter: mobileEnter instanceof HTMLButtonElement ? mobileEnter : null,
+	enableMobileAssist: prefersCoarsePointer,
+});
 
 setupQuickLinks({
 	container: quickLinks,
@@ -62,6 +77,7 @@ setupQuickLinks({
 		terminal.addHistory(command);
 		await terminal.run(command);
 		renderer.scrollToBottom();
+		prompt.refreshMobileAssist();
 		// Avoid iOS Safari auto-zoom/keyboard pop on quick-link taps.
 		if (!prefersCoarsePointer) prompt.focus();
 	},

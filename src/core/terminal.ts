@@ -16,12 +16,19 @@ export type Segment = TextSeg | SpanSeg | LinkSeg;
 interface Completion {
 	kind: string;
 	baseInput: string;
-	phase: string;
+	phase: "armed" | "listed" | "menu";
 	prefix: string;
 	matchesKey: string;
 	values: string[];
 	index: number;
 	lastValue: string | null;
+}
+
+interface CompletionMatches {
+	kind: string;
+	prefix: string;
+	matches: string[];
+	buildValue: (choice: string) => string;
 }
 
 export interface Context {
@@ -309,6 +316,94 @@ export function createTerminal({
 		return state.history[state.historyIndex] ?? "";
 	}
 
+	function getCompletionMatches(
+		current: string,
+		parsed = tokeniseWithMeta(current),
+	): CompletionMatches | null {
+		const { tokens, endsWithWhitespace } = parsed;
+
+		if (tokens.length === 0) return null;
+
+		const commandNames = Array.from(commands.keys()).sort() as string[];
+
+		if (tokens.length === 1 && !endsWithWhitespace) {
+			const prefix = tokens[0];
+			const matches = commandNames.filter((c) => c.startsWith(prefix));
+			return {
+				kind: "cmd",
+				prefix,
+				matches,
+				buildValue: (choice) => choice,
+			};
+		}
+
+		const cmdName = tokens[0];
+		const command = commands.get(cmdName);
+		if (!command?.complete) return null;
+
+		const args = tokens.slice(1);
+		const prefix = endsWithWhitespace ? "" : (args[args.length - 1] ?? "");
+		const argIndex = endsWithWhitespace
+			? args.length
+			: Math.max(0, args.length - 1);
+
+		const req = {
+			line: current,
+			tokens,
+			args,
+			endsWithWhitespace,
+			argIndex,
+			prefix,
+		};
+
+		const matches = command.complete(buildContext(), req) || [];
+
+		return {
+			kind: `arg:${cmdName}`,
+			prefix,
+			matches,
+			buildValue: (choice) => {
+				const baseTokens = endsWithWhitespace ? tokens : tokens.slice(0, -1);
+				return [...baseTokens, quoteIfNeeded(choice)].join(" ");
+			},
+		};
+	}
+
+	function listCompletions(current: string) {
+		const completionMatches = getCompletionMatches(current);
+		if (!completionMatches) return [];
+
+		const seen = new Set<string>();
+		const values: string[] = [];
+
+		for (const match of completionMatches.matches) {
+			const value = completionMatches.buildValue(match);
+			if (seen.has(value)) continue;
+			seen.add(value);
+			values.push(value);
+		}
+
+		return values;
+	}
+
+	function listRecentHistory(limit = 6) {
+		const max = Math.max(0, Math.floor(limit));
+		if (max === 0) return [];
+
+		const recent: string[] = [];
+		const seen = new Set<string>();
+
+		for (let i = state.history.length - 1; i >= 0; i--) {
+			const line = state.history[i] ?? "";
+			if (line.length === 0 || seen.has(line)) continue;
+			seen.add(line);
+			recent.push(line);
+			if (recent.length >= max) break;
+		}
+
+		return recent;
+	}
+
 	function autocomplete(current: string) {
 		const parsed = tokeniseWithMeta(current);
 
@@ -324,53 +419,18 @@ export function createTerminal({
 			state.completion = null;
 		}
 
-		const { tokens, endsWithWhitespace } = parsed;
+		if (parsed.tokens.length === 0) return "";
 
-		if (tokens.length === 0) return "";
-
-		const commandNames = Array.from(commands.keys()).sort() as string[];
-
-		if (tokens.length === 1 && !endsWithWhitespace) {
-			const prefix = tokens[0];
-			const matches = commandNames.filter((c) => c.startsWith(prefix));
-			return (
-				applyMatches("cmd", current, prefix, matches, (choice) => choice) ??
-				current
-			);
-		}
-
-		const cmdName = tokens[0];
-		const command = commands.get(cmdName);
-		if (!command?.complete) return current;
-
-		const args = tokens.slice(1);
-		const prefix = endsWithWhitespace ? "" : (args[args.length - 1] ?? "");
-
-		const argIndex = endsWithWhitespace
-			? args.length
-			: Math.max(0, args.length - 1);
-
-		const req = {
-			line: current,
-			tokens,
-			args,
-			endsWithWhitespace,
-			argIndex,
-			prefix,
-		};
-
-		const candidates = command.complete(buildContext(), req) || [];
+		const completionMatches = getCompletionMatches(current, parsed);
+		if (!completionMatches) return current;
 
 		return (
 			applyMatches(
-				`arg:${cmdName}`,
+				completionMatches.kind,
 				current,
-				prefix,
-				candidates,
-				(choice: string) => {
-					const baseTokens = endsWithWhitespace ? tokens : tokens.slice(0, -1);
-					return [...baseTokens, quoteIfNeeded(choice)].join(" ");
-				},
+				completionMatches.prefix,
+				completionMatches.matches,
+				completionMatches.buildValue,
 			) ?? current
 		);
 	}
@@ -482,6 +542,8 @@ export function createTerminal({
 		addHistory,
 		historyUp,
 		historyDown,
+		listCompletions,
+		listRecentHistory,
 		autocomplete,
 		refreshIntroIfPristine,
 	};

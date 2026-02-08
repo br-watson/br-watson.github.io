@@ -34,7 +34,13 @@ export function buildOpenAliasMap(profile: Profile) {
 	return aliases;
 }
 
-export function createCommandRegistry({ profile }: { profile: Profile }) {
+export function createCommandRegistry({
+	profile,
+	isMobile = false,
+}: {
+	profile: Profile;
+	isMobile?: boolean;
+}) {
 	const commands: Commands = new Map();
 
 	const cmd = (
@@ -63,7 +69,9 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 			"",
 			...rows,
 			"",
-			"Tips: use ↑/↓ for history, Tab for autocomplete (Shift+Tab to move focus).",
+			isMobile
+				? "Tips: tap a suggestion to autocomplete, then tap Enter to run."
+				: "Tips: use ↑/↓ for history and Tab for autocomplete (Shift+Tab to move focus).",
 		];
 
 		ctx.printPre(lines.join("\n"), "ok");
@@ -155,7 +163,6 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 						t(`${p.desc}\n`),
 						...(p.repoLink ? [l(p.repoLink), t("\n")] : [t("")]),
 						...(p.deployedLink ? [l(p.deployedLink), t("\n")] : [t("")]),
-						// tags
 						p.tags && p.tags.length > 0
 							? t(`Tech stack: ${p.tags.join(", ")}\n`)
 							: t(""),
@@ -176,7 +183,6 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 									t("\n"),
 								]
 							: [t("")]),
-						// tags
 						e.tags && e.tags.length > 0
 							? t(`Tags: ${e.tags.join(", ")}\n`)
 							: t(""),
@@ -224,7 +230,9 @@ export function createCommandRegistry({ profile }: { profile: Profile }) {
 
 			if (!target) {
 				ctx.printLine(
-					"open: missing target (press Tab to see valid options)",
+					isMobile
+						? "open: missing target (see the suggestions for valid options)"
+						: "open: missing target (press Tab to see valid options)",
 					"error",
 				);
 				return;
