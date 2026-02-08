@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Terminal-style developer portfolio" />
     <title>Brad — Terminal Portfolio</title>
+    <script>
+        (() => {
+            const THEME_KEY = "terminal-theme";
+            const isTheme = (value) => value === "light" || value === "dark";
+
+            try {
+                const stored = localStorage.getItem(THEME_KEY);
+                const preferred = window.matchMedia("(prefers-color-scheme: light)").matches
+                    ? "light"
+                    : "dark";
+                document.documentElement.dataset.theme = isTheme(stored) ? stored : preferred;
+            } catch {
+                document.documentElement.dataset.theme = "dark";
+            }
+        })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
     <link rel="stylesheet" href="styles.css" />
 </head>
