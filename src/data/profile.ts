@@ -97,7 +97,6 @@ export const PROFILE: Profile = {
 		"Make actual CV",
 		"Add education section",
 		"Add way for mobile to access command history and autocomplete",
-		"Make banner nicer on mobile",
 		"Write README",
 		"Make sure accessibility is good",
 		"Make sure performance is good",
