@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
     <meta name="description" content="Terminal-style developer portfolio" />
     <title>Brad — Terminal Portfolio</title>
     <script>
@@ -56,18 +56,54 @@
         <div id="quickLinksList" class="quick-links-list"></div>
     </nav>
 
-    <section
-        id="mobileAssist"
-        class="mobile-assist"
-        role="group"
-        aria-label="Mobile command assist"
+    <section id="mobileCommandTray" class="mobile-command-tray" aria-label="Mobile command tray" hidden>
+        <div id="mobileCommandList" class="mobile-command-list" role="group" aria-label="Quick commands"></div>
+        <div class="mobile-command-actions">
+            <button id="mobileTrayBack" class="mobile-tray-back" type="button" hidden>Back</button>
+            <button id="mobileCustomTrigger" class="mobile-custom-trigger" type="button">
+                Custom command
+            </button>
+        </div>
+    </section>
+
+    <div
+        id="mobileCommandDialog"
+        class="mobile-command-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobileCustomTitle"
         hidden
     >
-        <div id="mobileSuggestions" class="mobile-suggestions" aria-label="Command suggestions"></div>
-        <button id="mobileEnter" class="mobile-enter" type="button" aria-label="Run current command">
-            Enter
-        </button>
-    </section>
+        <div class="mobile-command-backdrop" data-dialog-close></div>
+        <form id="mobileCustomForm" class="mobile-custom-form" autocomplete="off">
+            <h2 id="mobileCustomTitle" class="mobile-custom-title">Run a custom command</h2>
+            <label class="sr-only" for="mobileCustomInput">Custom command</label>
+            <input
+                id="mobileCustomInput"
+                type="text"
+                inputmode="text"
+                spellcheck="false"
+                autocapitalize="off"
+                placeholder="Type a command (try: help)"
+            />
+            <div class="mobile-custom-suggestions-wrap">
+                <span id="mobileCustomSuggestionsHint" class="mobile-custom-suggestions-hint">
+                    Suggestions and history appear here
+                </span>
+                <div
+                    id="mobileCustomSuggestions"
+                    class="mobile-custom-suggestions"
+                    aria-label="Custom command suggestions"
+                ></div>
+            </div>
+            <div class="mobile-custom-actions">
+                <button id="mobileCustomCancel" class="mobile-custom-cancel" type="button">
+                    Cancel
+                </button>
+                <button class="mobile-custom-run" type="submit">Run</button>
+            </div>
+        </form>
+    </div>
 
     <form id="prompt" class="prompt" autocomplete="off">
         <span class="ps1" aria-hidden="true">brad@portfolio</span>
@@ -79,6 +115,7 @@
         <input
                 id="input"
                 type="text"
+                placeholder="Type a command (try: help)"
                 inputmode="text"
                 spellcheck="false"
                 autocapitalize="off"
