@@ -20,6 +20,7 @@ interface PromptOptions {
 	terminal: TerminalLike;
 	renderer: Renderer;
 	mobileAssist?: HTMLElement | null;
+	mobileSuggestionsHint?: HTMLElement | null;
 	mobileSuggestions?: HTMLElement | null;
 	mobileEnter?: HTMLButtonElement | null;
 	enableMobileAssist?: boolean;
@@ -27,6 +28,7 @@ interface PromptOptions {
 
 interface MobileAssistElements {
 	container: HTMLElement;
+	hint: HTMLElement;
 	suggestions: HTMLElement;
 	enter: HTMLButtonElement;
 }
@@ -39,18 +41,25 @@ interface MobileSuggestionSet {
 function resolveMobileAssistElements({
 	enableMobileAssist,
 	mobileAssist,
+	mobileSuggestionsHint,
 	mobileSuggestions,
 	mobileEnter,
 }: Pick<
 	PromptOptions,
-	"enableMobileAssist" | "mobileAssist" | "mobileSuggestions" | "mobileEnter"
+	| "enableMobileAssist"
+	| "mobileAssist"
+	| "mobileSuggestionsHint"
+	| "mobileSuggestions"
+	| "mobileEnter"
 >): MobileAssistElements | null {
 	if (!enableMobileAssist) return null;
 	if (!(mobileAssist instanceof HTMLElement)) return null;
+	if (!(mobileSuggestionsHint instanceof HTMLElement)) return null;
 	if (!(mobileSuggestions instanceof HTMLElement)) return null;
 	if (!(mobileEnter instanceof HTMLButtonElement)) return null;
 	return {
 		container: mobileAssist,
+		hint: mobileSuggestionsHint,
 		suggestions: mobileSuggestions,
 		enter: mobileEnter,
 	};
@@ -118,6 +127,7 @@ export function createPromptController({
 	terminal,
 	renderer,
 	mobileAssist,
+	mobileSuggestionsHint,
 	mobileSuggestions,
 	mobileEnter,
 	enableMobileAssist = false,
@@ -125,6 +135,7 @@ export function createPromptController({
 	const mobileAssistElements = resolveMobileAssistElements({
 		enableMobileAssist,
 		mobileAssist,
+		mobileSuggestionsHint,
 		mobileSuggestions,
 		mobileEnter,
 	});
@@ -148,6 +159,7 @@ export function createPromptController({
 			...values.map((value) => buildMobileSuggestionButton(value, type)),
 		);
 		mobileAssistElements.suggestions.hidden = values.length === 0;
+		mobileAssistElements.hint.hidden = values.length > 0;
 	}
 
 	async function submitLine({

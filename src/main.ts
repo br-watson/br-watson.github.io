@@ -43,6 +43,7 @@ const ps1 = document.querySelector(".ps1");
 const quickLinks = document.getElementById("quickLinks");
 const quickLinksList = document.getElementById("quickLinksList");
 const mobileAssist = document.getElementById("mobileAssist");
+const mobileSuggestionsHint = document.getElementById("mobileSuggestionsHint");
 const mobileSuggestions = document.getElementById("mobileSuggestions");
 const mobileEnter = document.getElementById("mobileEnter");
 const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
@@ -80,6 +81,7 @@ const prompt = createPromptController({
 	terminal,
 	renderer,
 	mobileAssist,
+	mobileSuggestionsHint,
 	mobileSuggestions,
 	mobileEnter: mobileEnter instanceof HTMLButtonElement ? mobileEnter : null,
 	enableMobileAssist: prefersCoarsePointer,
