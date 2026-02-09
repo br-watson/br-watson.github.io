@@ -32,6 +32,7 @@
 html,
 body {
 	height: 100%;
+	min-height: 100%;
 	touch-action: manipulation;
 }
 
@@ -42,6 +43,7 @@ html {
 
 body {
 	margin: 0;
+	min-height: 100svh;
 	background: radial-gradient(
 		1200px 800px at 20% 10%,
 		#172235 0%,
@@ -64,7 +66,9 @@ body {
 
 .terminal {
 	width: min(980px, 100%);
+	max-width: calc(100vw - (var(--frame-pad) * 2));
 	height: min(720px, 100%);
+	max-height: calc(100svh - (var(--frame-pad) * 2));
 	background:
 		linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
 		var(--panel);
