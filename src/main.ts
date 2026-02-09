@@ -73,6 +73,7 @@ const terminal = createTerminal({
 	commands,
 	theme: themeController,
 	openUrl,
+	isMobile: prefersCoarsePointer,
 });
 
 const prompt = createPromptController({

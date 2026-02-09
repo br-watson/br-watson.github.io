@@ -49,6 +49,7 @@ export function createTerminal({
 	commands,
 	openUrl,
 	theme,
+	isMobile,
 }: {
 	renderer: Renderer;
 	profile: Profile;
@@ -56,6 +57,7 @@ export function createTerminal({
 	commands: Commands;
 	openUrl: (href: string | URL) => void;
 	theme: ThemeController;
+	isMobile: boolean;
 }) {
 	const state: {
 		history: string[];
@@ -78,7 +80,19 @@ export function createTerminal({
 		renderer.clear();
 		printBanner();
 		printLine(
-			[t("Type "), s("accent", "help"), t(" to see commands.")],
+			[
+				t("Type "),
+				s("accent", "help"),
+				t(" to see commands.\n"),
+				s("accent", "Tips: "),
+				isMobile
+					? t(
+							"start typing to see autocomplete suggestions, then tap Enter to run.",
+						)
+					: t(
+							"use ↑/↓ for history and Tab for autocomplete (Shift+Tab to move focus).",
+						),
+			],
 			"muted",
 		);
 		renderer.scrollToBottom();
