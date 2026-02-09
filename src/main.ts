@@ -1,4 +1,4 @@
-import { createCommandRegistry } from "./core/commands.js";
+import { type Command, createCommandRegistry } from "./core/commands.js";
 import { createTerminal } from "./core/terminal.js";
 import { buildFs } from "./data/fs.js";
 import { PROFILE } from "./data/profile.js";
@@ -7,6 +7,10 @@ import { createPromptController } from "./services/prompt.js";
 import { createThemeController } from "./services/theme.js";
 import { createToast } from "./services/toast.js";
 import { createDomRenderer } from "./ui/domRenderer.js";
+import {
+	type MobileTrayCommand,
+	setupMobileCommandTray,
+} from "./ui/mobileCommandTray.js";
 import { setupQuickLinks } from "./ui/quickLinks.js";
 
 function requireElement<T extends Element>(
@@ -42,13 +46,32 @@ const title = document.querySelector(".title");
 const ps1 = document.querySelector(".ps1");
 const quickLinks = document.getElementById("quickLinks");
 const quickLinksList = document.getElementById("quickLinksList");
-const mobileAssist = document.getElementById("mobileAssist");
-const mobileSuggestionsHint = document.getElementById("mobileSuggestionsHint");
-const mobileSuggestions = document.getElementById("mobileSuggestions");
-const mobileEnter = document.getElementById("mobileEnter");
+const mobileCommandTray = document.getElementById("mobileCommandTray");
+const mobileCommandList = document.getElementById("mobileCommandList");
+const mobileTrayBack = document.getElementById("mobileTrayBack");
+const mobileCustomTrigger = document.getElementById("mobileCustomTrigger");
+const mobileCommandDialog = document.getElementById("mobileCommandDialog");
+const mobileCustomForm = document.getElementById("mobileCustomForm");
+const mobileCustomInput = document.getElementById("mobileCustomInput");
+const mobileCustomSuggestions = document.getElementById(
+	"mobileCustomSuggestions",
+);
+const mobileCustomSuggestionsHint = document.getElementById(
+	"mobileCustomSuggestionsHint",
+);
+const mobileCustomCancel = document.getElementById("mobileCustomCancel");
 const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 const SHELL_ID = "brad@portfolio";
+
+function buildMobileTrayCommands(
+	registry: ReadonlyMap<string, Command>,
+): MobileTrayCommand[] {
+	return Array.from(registry.values()).map((command) => ({
+		command: command.name,
+		kind: typeof command.complete === "function" ? "withArgs" : "simple",
+	}));
+}
 
 if (title) title.textContent = `${SHELL_ID}: ~`;
 if (ps1) ps1.textContent = SHELL_ID;
@@ -75,17 +98,35 @@ const terminal = createTerminal({
 	openUrl,
 	isMobile: prefersCoarsePointer,
 });
+const mobileTrayCommands = buildMobileTrayCommands(commands);
 
-const prompt = createPromptController({
+let promptController: ReturnType<typeof createPromptController> | null = null;
+let isRunningCommand = false;
+
+async function runCommand(command: string): Promise<void> {
+	const value = command.trim();
+	if (value.length === 0 || isRunningCommand) return;
+
+	isRunningCommand = true;
+	try {
+		promptController?.markFirstCommandSubmitted();
+		terminal.addHistory(value);
+		await terminal.run(value);
+		renderer.scrollToBottom();
+	} finally {
+		isRunningCommand = false;
+	}
+
+	if (!prefersCoarsePointer) {
+		promptController?.focus();
+	}
+}
+
+promptController = createPromptController({
 	form,
 	input,
 	terminal,
-	renderer,
-	mobileAssist,
-	mobileSuggestionsHint,
-	mobileSuggestions,
-	mobileEnter: mobileEnter instanceof HTMLButtonElement ? mobileEnter : null,
-	enableMobileAssist: prefersCoarsePointer,
+	onRunCommand: runCommand,
 });
 
 setupQuickLinks({
@@ -93,23 +134,34 @@ setupQuickLinks({
 	list: quickLinksList,
 	profile: PROFILE,
 	aliases: ["cv", "github", "linkedin"],
-	onRunCommand: async (command) => {
-		if (prefersCoarsePointer && document.activeElement === input) {
-			input.blur();
-		}
-		prompt.markFirstCommandSubmitted();
-		terminal.addHistory(command);
-		await terminal.run(command);
-		renderer.scrollToBottom();
-		prompt.refreshMobileAssist();
-		// Avoid iOS Safari auto-zoom/keyboard pop on quick-link taps.
-		if (!prefersCoarsePointer) prompt.focus();
-	},
+	onRunCommand: runCommand,
+});
+
+setupMobileCommandTray({
+	enabled: prefersCoarsePointer,
+	container: mobileCommandTray,
+	list: mobileCommandList,
+	back: mobileTrayBack instanceof HTMLButtonElement ? mobileTrayBack : null,
+	customTrigger:
+		mobileCustomTrigger instanceof HTMLButtonElement
+			? mobileCustomTrigger
+			: null,
+	dialog: mobileCommandDialog,
+	form: mobileCustomForm instanceof HTMLFormElement ? mobileCustomForm : null,
+	input:
+		mobileCustomInput instanceof HTMLInputElement ? mobileCustomInput : null,
+	suggestions: mobileCustomSuggestions,
+	suggestionsHint: mobileCustomSuggestionsHint,
+	cancel:
+		mobileCustomCancel instanceof HTMLButtonElement ? mobileCustomCancel : null,
+	terminal,
+	commands: mobileTrayCommands,
+	onRunCommand: runCommand,
 });
 
 applyInitialTheme();
 terminal.boot();
-if (!prefersCoarsePointer) prompt.focus();
+if (!prefersCoarsePointer) promptController?.focus();
 
 let introResizeRaf = 0;
 window.addEventListener("resize", () => {
@@ -120,16 +172,19 @@ window.addEventListener("resize", () => {
 	});
 });
 
-let lastTouchEnd = 0;
-document.addEventListener(
-	"touchend",
-	(event) => {
-		const now = performance.now();
-		if (event.touches.length > 0) return;
-		if (now - lastTouchEnd <= 300) {
-			event.preventDefault();
-		}
-		lastTouchEnd = now;
-	},
-	{ passive: false },
-);
+if (prefersCoarsePointer) {
+	let lastTouchEnd = 0;
+	document.addEventListener(
+		"touchend",
+		(event) => {
+			if (!event.cancelable) return;
+			if (event.touches.length > 0) return;
+			const now = performance.now();
+			if (now - lastTouchEnd <= 300) {
+				event.preventDefault();
+			}
+			lastTouchEnd = now;
+		},
+		{ passive: false },
+	);
+}

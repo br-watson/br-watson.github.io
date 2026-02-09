@@ -87,7 +87,7 @@ export function createTerminal({
 				s("accent", "Tips: "),
 				isMobile
 					? t(
-							"start typing to see autocomplete suggestions, then tap Enter to run.",
+							"use the command buttons below, or tap Custom command for autocomplete and history.",
 						)
 					: t(
 							"use ↑/↓ for history and Tab for autocomplete (Shift+Tab to move focus).",
