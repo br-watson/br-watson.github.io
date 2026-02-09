@@ -128,6 +128,13 @@ export function createPromptController({
 		mobileSuggestions,
 		mobileEnter,
 	});
+	let hasSubmittedFirstCommand = false;
+
+	function markFirstCommandSubmitted(): void {
+		if (hasSubmittedFirstCommand) return;
+		hasSubmittedFirstCommand = true;
+		input.removeAttribute("placeholder");
+	}
 
 	function focus(): void {
 		input.focus({ preventScroll: true });
@@ -152,6 +159,7 @@ export function createPromptController({
 		input.value = "";
 
 		if (line.trim().length > 0) {
+			markFirstCommandSubmitted();
 			terminal.addHistory(line);
 			await terminal.run(line);
 		}
@@ -245,5 +253,5 @@ export function createPromptController({
 
 	refreshMobileAssist();
 
-	return { focus, refreshMobileAssist };
+	return { focus, refreshMobileAssist, markFirstCommandSubmitted };
 }

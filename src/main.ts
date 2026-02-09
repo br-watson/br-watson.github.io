@@ -94,6 +94,7 @@ setupQuickLinks({
 		if (prefersCoarsePointer && document.activeElement === input) {
 			input.blur();
 		}
+		prompt.markFirstCommandSubmitted();
 		terminal.addHistory(command);
 		await terminal.run(command);
 		renderer.scrollToBottom();

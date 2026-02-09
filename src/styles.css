@@ -512,6 +512,12 @@ a:hover {
 	caret-color: var(--accent);
 }
 
+#input::placeholder {
+	color: var(--muted);
+	font-size: 13px;
+	opacity: 0.85;
+}
+
 #input:focus-visible {
 	outline: 1px solid var(--accent);
 	outline-offset: 5px;
