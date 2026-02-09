@@ -32,6 +32,7 @@
 html,
 body {
 	height: 100%;
+	min-height: 100%;
 	touch-action: manipulation;
 }
 
@@ -42,6 +43,7 @@ html {
 
 body {
 	margin: 0;
+	min-height: 100svh;
 	background: radial-gradient(
 		1200px 800px at 20% 10%,
 		#172235 0%,
@@ -64,7 +66,9 @@ body {
 
 .terminal {
 	width: min(980px, 100%);
+	max-width: calc(100vw - (var(--frame-pad) * 2));
 	height: min(720px, 100%);
+	max-height: calc(100svh - (var(--frame-pad) * 2));
 	background:
 		linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
 		var(--panel);
@@ -297,6 +301,8 @@ a:hover {
 	align-items: center;
 	align-self: center;
 	justify-self: end;
+	padding-left: 4px;
+	min-height: 34px;
 }
 
 .quick-links[hidden],
@@ -325,12 +331,40 @@ a:hover {
 	min-width: 0;
 	overflow-x: auto;
 	overflow-y: hidden;
-	padding: 2px 12px 2px 2px;
+	padding: 4px 12px 8px 2px;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	-webkit-overflow-scrolling: touch;
 	scroll-padding-inline: 12px;
+	scrollbar-gutter: stable;
 	touch-action: pan-x;
+}
+
+.mobile-command-list {
+	padding-right: 26px;
+	-webkit-mask-image: linear-gradient(
+		90deg,
+		#000 0,
+		#000 calc(100% - 24px),
+		transparent 100%
+	);
+	mask-image: linear-gradient(
+		90deg,
+		#000 0,
+		#000 calc(100% - 24px),
+		transparent 100%
+	);
+}
+
+.quick-links-list {
+	padding-left: 10px;
+	-webkit-mask-image: linear-gradient(
+		90deg,
+		transparent 0,
+		#000 12px,
+		#000 100%
+	);
+	mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 100%);
 }
 
 .quick-links-list::-webkit-scrollbar,
@@ -344,7 +378,13 @@ a:hover {
 .mobile-command,
 .mobile-custom-trigger,
 .mobile-tray-back {
+	appearance: none;
+	-webkit-appearance: none;
 	font: inherit;
+	line-height: 1.2;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	font-size: clamp(11px, 1.2vw, 12px);
 	color: var(--muted);
 	border: 1px solid rgba(255, 255, 255, 0.16);
@@ -490,9 +530,13 @@ a:hover {
 .mobile-custom-suggestions-wrap {
 	display: grid;
 	gap: 6px;
+	min-height: 34px;
 }
 
 .mobile-custom-suggestions-hint {
+	display: flex;
+	align-items: center;
+	min-height: 34px;
 	color: var(--muted);
 	font-size: 11px;
 	letter-spacing: 0.02em;
@@ -507,6 +551,7 @@ a:hover {
 	flex-wrap: nowrap;
 	align-items: center;
 	gap: 8px;
+	min-height: 34px;
 	min-width: 0;
 	overflow-x: auto;
 	overflow-y: hidden;
@@ -528,7 +573,12 @@ a:hover {
 }
 
 .mobile-custom-suggestion {
+	appearance: none;
+	-webkit-appearance: none;
 	font: inherit;
+	line-height: 1.2;
+	display: inline-flex;
+	align-items: center;
 	font-size: 12px;
 	color: var(--muted);
 	border: 1px solid rgba(255, 255, 255, 0.16);
@@ -571,7 +621,13 @@ a:hover {
 
 .mobile-custom-cancel,
 .mobile-custom-run {
+	appearance: none;
+	-webkit-appearance: none;
 	font: inherit;
+	line-height: 1.2;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	font-size: 12px;
 	border-radius: 999px;
 	padding: 5px 12px;
@@ -730,7 +786,6 @@ a:hover {
 	outline: 1px solid var(--accent);
 	outline-offset: 5px;
 	border-radius: 6px;
-	caret: var(--accent) auto block; /* this should work one day, when browsers actually support it */
 }
 
 .sr-only {

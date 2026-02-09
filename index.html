@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content="Terminal-style developer portfolio" />
     <title>Brad — Terminal Portfolio</title>
     <script>
@@ -60,7 +60,14 @@
         <div id="mobileCommandList" class="mobile-command-list" role="group" aria-label="Quick commands"></div>
         <div class="mobile-command-actions">
             <button id="mobileTrayBack" class="mobile-tray-back" type="button" hidden>Back</button>
-            <button id="mobileCustomTrigger" class="mobile-custom-trigger" type="button">
+            <button
+                id="mobileCustomTrigger"
+                class="mobile-custom-trigger"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="mobileCommandDialog"
+                aria-expanded="false"
+            >
                 Custom command
             </button>
         </div>
@@ -72,10 +79,11 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="mobileCustomTitle"
+        aria-hidden="true"
         hidden
     >
         <div class="mobile-command-backdrop" data-dialog-close></div>
-        <form id="mobileCustomForm" class="mobile-custom-form" autocomplete="off">
+        <form id="mobileCustomForm" class="mobile-custom-form" autocomplete="off" novalidate>
             <h2 id="mobileCustomTitle" class="mobile-custom-title">Run a custom command</h2>
             <label class="sr-only" for="mobileCustomInput">Custom command</label>
             <input
@@ -84,6 +92,8 @@
                 inputmode="text"
                 spellcheck="false"
                 autocapitalize="off"
+                autocorrect="off"
+                enterkeyhint="go"
                 placeholder="Type a command (try: help)"
             />
             <div class="mobile-custom-suggestions-wrap">
@@ -113,13 +123,15 @@
 
         <label class="sr-only" for="input">Command input</label>
         <input
-                id="input"
-                type="text"
-                placeholder="Type a command (try: help)"
-                inputmode="text"
-                spellcheck="false"
-                autocapitalize="off"
-                autofocus
+            id="input"
+            type="text"
+            placeholder="Type a command (try: help)"
+            inputmode="text"
+            spellcheck="false"
+            autocapitalize="off"
+            autocorrect="off"
+            enterkeyhint="go"
+            autofocus
         />
     </form>
 </main>
