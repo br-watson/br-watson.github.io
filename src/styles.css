@@ -99,6 +99,19 @@ body {
 	height: 10px;
 	border-radius: 999px;
 	opacity: 0.9;
+	position: relative;
+}
+.dot::before {
+	content: "•ᴗ•";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -52%);
+	font-family: "Segoe UI", "Apple Symbols", "Arial Unicode MS", sans-serif;
+	font-size: 7px;
+	line-height: 1;
+	white-space: nowrap;
+	color: rgba(0, 0, 0, 0.58);
 }
 .dot.red {
 	background: #ff5f57;
