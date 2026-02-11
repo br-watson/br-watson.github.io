@@ -2,9 +2,9 @@
 	--bg: #0b0f14;
 	--panel: #0f1621;
 	--text: #d7e1ee;
-	--muted: #8ea3bd;
+	--muted: #95a9c1;
 	--accent: #7ee787;
-	--error: #ff7b72;
+	--error: #ff7e75;
 	--link: #79c0ff;
 	--shadow: rgba(0, 0, 0, 0.35);
 	--frame-pad: clamp(12px, 2.5vw, 18px);
@@ -18,10 +18,10 @@
 	--bg: #d6cfb8;
 	--panel: #e3dcc5;
 	--text: #222a2f;
-	--muted: #455158;
-	--accent: #059e00;
-	--error: #d6230e;
-	--link: #0068b1;
+	--muted: #354045;
+	--accent: #0d7000;
+	--error: #c11518;
+	--link: #0c5cac;
 	--shadow: rgba(20, 34, 64, 0.18);
 	color-scheme: light;
 }
@@ -99,6 +99,19 @@ body {
 	height: 10px;
 	border-radius: 999px;
 	opacity: 0.9;
+	position: relative;
+}
+.dot::before {
+	content: "•ᴗ•";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -52%);
+	font-family: "Segoe UI", "Apple Symbols", "Arial Unicode MS", sans-serif;
+	font-size: 7px;
+	line-height: 1;
+	white-space: nowrap;
+	color: rgba(0, 0, 0, 0.58);
 }
 .dot.red {
 	background: #ff5f57;
