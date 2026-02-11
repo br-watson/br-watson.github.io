@@ -157,7 +157,7 @@ setupQuickLinks({
 	container: quickLinks,
 	list: quickLinksList,
 	profile: PROFILE,
-	aliases: ["cv", "github", "linkedin"],
+	aliases: ["cv", "github", "linkedin", "email"],
 	onRunCommand: runCommand,
 });
 
