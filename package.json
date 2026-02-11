@@ -23,7 +23,7 @@
 		"build": "pnpm run clean && pnpm run typecheck && pnpm run check && pnpm run copy && pnpm run build:prod",
 
 		"predeploy": "pnpm run build",
-		"deploy": "gh-pages -d dist"
+		"deploy": "gh-pages -d dist -m \"deploy: updates $(date +'%Y-%m-%d %H:%M:%S %Z')\""
 	},
 	"author": "Bradley Watson",
 	"engines": {
