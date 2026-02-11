@@ -48,14 +48,17 @@ function renderLinks(ctx: Context, item: Extract<FsNode, { type: "links" }>) {
 	const padOnly = (str: string, targetLen: number) =>
 		" ".repeat(Math.max(0, targetLen - str.length));
 
-	const entries = Object.entries(item.items).flatMap(([key, href]) => [
-		t(`${key}: `.padEnd(10, " ")),
-		l(href, key),
-		t(padOnly(key, 8)),
-		t(" (or run "),
-		s("accent", `open ${key}`),
-		t(")\n"),
-	]);
+	const entries = Object.entries(item.items).flatMap(([key, href]) => {
+		const label = key === "email" ? href.replace("mailto:", "") : key;
+		return [
+			t(`${key}: `.padEnd(10, " ")),
+			l(href, label),
+			t(padOnly(label, 11)),
+			t(" (or run "),
+			s("accent", `open ${key}`),
+			t(")\n"),
+		];
+	});
 	ctx.printLine(entries, "muted");
 }
 
