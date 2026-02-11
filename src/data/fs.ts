@@ -34,7 +34,7 @@ export function buildFs(profile: Profile): FileSystem {
 				},
 				"contact.txt": {
 					type: "links",
-					items: { ...profile.links, email: profile.email },
+					items: { ...profile.links, email: `mailto:${profile.email}` },
 				},
 				"skills.txt": {
 					type: "file",
