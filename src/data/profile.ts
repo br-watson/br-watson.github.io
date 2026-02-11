@@ -59,7 +59,7 @@ export const PROFILE: Profile = {
 	],
 	role: "Software Engineer",
 	location: "Leeds, UK",
-	email: "you@example.com", // TODO: make this my real email address
+	email: "br@dley.dev",
 	links: {
 		github: "https://github.com/br-watson",
 		linkedin: "https://www.linkedin.com/in/bradleyrwatson",
@@ -165,7 +165,6 @@ export const PROFILE: Profile = {
 		"Write README",
 		"Make sure accessibility is good",
 		"Make sure performance is good",
-		"Add my actual email",
-		"Write tests",
+		"Write tests (TDD kinda went out the window for this project)",
 	],
 };
