@@ -64,10 +64,34 @@ const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 const SHELL_ID = "brad@portfolio";
 
+const MOBILE_TRAY_PRIORITY = [
+	"help",
+	"contact",
+	"bio",
+	"projects",
+	"roles",
+	"education",
+	"cv",
+] as const;
+
 function buildMobileTrayCommands(
 	registry: ReadonlyMap<string, Command>,
 ): MobileTrayCommand[] {
-	return Array.from(registry.values()).map((command) => ({
+	const all = Array.from(registry.values());
+	const prioritySet = new Set<string>(MOBILE_TRAY_PRIORITY);
+
+	const prioritised: Command[] = [];
+	for (const name of MOBILE_TRAY_PRIORITY) {
+		const cmd = registry.get(name);
+		if (cmd) prioritised.push(cmd);
+	}
+
+	const ordered = [
+		...prioritised,
+		...all.filter((command) => !prioritySet.has(command.name)),
+	];
+
+	return ordered.map((command) => ({
 		command: command.name,
 		kind: typeof command.complete === "function" ? "withArgs" : "simple",
 	}));
