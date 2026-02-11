@@ -16,14 +16,6 @@ export function buildFs(profile: Profile): FileSystem {
 		"~": {
 			type: "dir",
 			children: {
-				"README.txt": {
-					type: "file",
-					content: [
-						"Welcome.",
-						"",
-						"Try: help, ls, cat README.txt, bio, projects, socials, open cv, open github",
-					].join("\n"),
-				},
 				"bio.txt": {
 					type: "bio",
 					lines: profile.bio,
