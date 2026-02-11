@@ -158,11 +158,10 @@ export const PROFILE: Profile = {
 		},
 	],
 	todo: [
-		"Finish writing profile (bio, experience, projects, skills etc.)",
+		"Finish writing profile (bio, experience, projects, skills, readme etc.)",
 		"Add more commands",
 		"Improve txt files output formatting",
 		"Make actual CV",
-		"Write README",
 		"Make sure accessibility is good",
 		"Make sure performance is good",
 		"Write tests (TDD kinda went out the window for this project)",
