@@ -35,14 +35,14 @@ export function createDomRenderer({
 		return Math.max(1, Math.floor(screen.clientWidth / charWidth));
 	}
 
-	function isSafeHref(href: string): boolean {
+	function getSafeUrl(href: string): URL | null {
 		const allowedProtocols = new Set(["https:", "mailto:"]);
 		try {
 			const url = new URL(href, window.location.href);
-			if (allowedProtocols.has(url.protocol)) return true;
-			return url.origin === window.location.origin;
+			if (allowedProtocols.has(url.protocol)) return url;
+			return url.origin === window.location.origin ? url : null;
 		} catch {
-			return false;
+			return null;
 		}
 	}
 
@@ -59,13 +59,16 @@ export function createDomRenderer({
 		}
 
 		if (seg.type === "link") {
-			if (!isSafeHref(seg.href)) {
+			const url = getSafeUrl(seg.href);
+			if (!url) {
 				return document.createTextNode(seg.text ?? seg.href);
 			}
 			const a = document.createElement("a");
-			a.href = seg.href;
-			a.target = "_blank";
-			a.rel = "noopener noreferrer";
+			a.href = url.toString();
+			if (url.protocol !== "mailto:") {
+				a.target = "_blank";
+				a.rel = "noopener noreferrer";
+			}
 			a.textContent = seg.text ?? seg.href;
 			return a;
 		}
