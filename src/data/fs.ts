@@ -32,9 +32,9 @@ export function buildFs(profile: Profile): FileSystem {
 					type: "projects",
 					projects: profile.projects,
 				},
-				"socials.txt": {
+				"contact.txt": {
 					type: "links",
-					items: profile.links,
+					items: { ...profile.links, email: profile.email },
 				},
 				"skills.txt": {
 					type: "file",

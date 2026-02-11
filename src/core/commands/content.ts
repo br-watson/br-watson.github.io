@@ -54,11 +54,11 @@ export function registerContentCommands({
 			args: ["projects.txt"],
 		},
 		{
-			name: "socials",
-			summary: "Alias: cat socials.txt",
-			usage: "socials",
+			name: "contact",
+			summary: "Alias: cat contact.txt",
+			usage: "contact",
 			targetCommand: "cat",
-			args: ["socials.txt"],
+			args: ["contact.txt"],
 		},
 		{
 			name: "cv",

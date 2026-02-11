@@ -28,7 +28,7 @@ export function registerSystemCommands({
 			...rows,
 			"",
 			isMobile
-				? "Tips: use command buttons below, or tap Custom command for autocomplete and history."
+				? 'Tip: use the command buttons below, or tap "Custom" to type commands with autocomplete and history.'
 				: "Tips: use ↑/↓ for history and Tab for autocomplete (Shift+Tab to move focus).",
 		];
 
