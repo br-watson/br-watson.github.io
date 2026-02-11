@@ -93,15 +93,9 @@ export const PROFILE: Profile = {
 			desc: "Built a free, no-login planning poker app for my team's sprint refinements after existing tools were paid or lacked custom decks. It supports multiple rooms, custom card sets, and real-time updates.",
 			deployedLink: "https://poker.bwatson.uk/",
 			tags: ["TypeScript", "React", "Tailwind CSS", "Firebase"],
-		},
-		{
-			name: "TODO...",
-			desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			repoLink: "https://github.com/",
-			tags: ["TODO..."],
-		},
+		}, // TODO
 	],
-	skills: ["TypeScript", "AWS", "TODO..."],
+	skills: ["TypeScript", "AWS", "TODO..."], // TODO
 	education: [
 		{
 			qualification: "Master of Mathematics (MMath)",
@@ -146,7 +140,7 @@ export const PROFILE: Profile = {
 			company: "Sky UK",
 			location: "Leeds, UK",
 			startDate: "Sep 2024",
-			description: "TODO...",
+			// description: "", // TODO
 		},
 		{
 			title: "Associate Software Engineer",
@@ -154,16 +148,18 @@ export const PROFILE: Profile = {
 			location: "Leeds, UK",
 			startDate: "Sep 2023",
 			endDate: "Sep 2024",
-			description: "TODO...",
+			// description: "", // TODO
 		},
 	],
 	todo: [
-		"Finish writing profile (bio, experience, projects, skills, readme etc.)",
+		"Finish writing profile (experience, projects, skills etc.)",
 		"Add more commands",
 		"Improve txt files output formatting",
 		"Make actual CV",
 		"Make sure accessibility is good",
 		"Make sure performance is good",
 		"Write tests (TDD kinda went out the window for this project)",
+		"Cap retained terminal output and command history",
+		"Optimize autocomplete: cache command/completion data and avoid full mobile suggestion list rerenders on each input.",
 	],
 };
