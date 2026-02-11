@@ -152,6 +152,23 @@ body {
 	min-width: 0;
 }
 
+.wip-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: clamp(10px, 1.1vw, 11px);
+	line-height: 1;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	color: var(--accent);
+	border: 1px solid rgba(126, 231, 135, 0.52);
+	border-bottom-color: rgba(126, 231, 135, 0.32);
+	background: rgba(126, 231, 135, 0.1);
+	border-radius: 999px;
+	padding: 4px 9px;
+	white-space: nowrap;
+}
+
 .theme-toggle {
 	font: inherit;
 	font-size: clamp(11px, 1.3vw, 12px);
@@ -191,10 +208,18 @@ body {
 }
 
 :root[data-theme="light"] .hint kbd,
+:root[data-theme="light"] .wip-badge,
 :root[data-theme="light"] .theme-toggle {
 	border: 1px solid rgba(34, 42, 47, 0.24);
 	border-bottom-color: rgba(34, 42, 47, 0.16);
 	background: rgba(34, 42, 47, 0.08);
+}
+
+:root[data-theme="light"] .wip-badge {
+	color: #0c5e00;
+	border: 1px solid rgba(12, 94, 0, 0.34);
+	border-bottom-color: rgba(12, 94, 0, 0.24);
+	background: rgba(5, 158, 0, 0.15);
 }
 
 :root[data-theme="light"] .theme-toggle:hover {

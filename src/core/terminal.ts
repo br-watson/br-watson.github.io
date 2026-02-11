@@ -71,6 +71,8 @@ export function createTerminal({
 		hasBooted: false,
 	};
 
+	const STATUS_LABEL = "status: work-in-progress";
+
 	function boot() {
 		state.hasBooted = true;
 		renderIntro();
@@ -133,6 +135,7 @@ export function createTerminal({
 		if (artLines.length > 0 && artWidth <= availableColumns) {
 			printPre(artLines.join("\n"), "accent");
 			printLine(profile.role, "muted");
+			printLine([s("accent", STATUS_LABEL)], "muted");
 			return;
 		}
 
@@ -173,6 +176,7 @@ export function createTerminal({
 		];
 
 		printLine(banner, "banner", false);
+		printLine([s("accent", STATUS_LABEL)], "muted");
 	}
 
 	function clamp(n: number, min: number, max: number) {
