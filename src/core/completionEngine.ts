@@ -36,6 +36,8 @@ export function createCompletionEngine({
 	getContext,
 	onListMatches,
 }: CompletionEngineOptions): CompletionEngine {
+	const commandNames = Array.from(commands.keys()).sort();
+
 	let state: CompletionState | null = null;
 
 	function getCompletionMatches(
@@ -45,8 +47,6 @@ export function createCompletionEngine({
 		const { tokens, endsWithWhitespace } = parsed;
 
 		if (tokens.length === 0) return null;
-
-		const commandNames = Array.from(commands.keys()).sort() as string[];
 
 		if (tokens.length === 1 && !endsWithWhitespace) {
 			const prefix = tokens[0];
