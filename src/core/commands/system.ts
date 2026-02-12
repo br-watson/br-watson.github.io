@@ -11,11 +11,12 @@ export function registerSystemCommands({
 	registerCommand,
 	isMobile,
 }: SystemOptions) {
-	registerCommand("help", "Show this help", "help", (ctx) => {
+	registerCommand("help", "Show this help", "help", true, (ctx) => {
 		const { s } = ctx.seg;
 		ctx.printLine([s("accent", "Available commands")], "ok");
 
 		const rows = Array.from(commands.values())
+			.filter((cmd) => cmd.showInHelp)
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map(
 				(command) =>
@@ -35,13 +36,15 @@ export function registerSystemCommands({
 		ctx.printPre(lines.join("\n"), "ok");
 	});
 
-	registerCommand("clear", "Clear the screen", "clear", (ctx) => ctx.clear());
+	registerCommand("clear", "Clear the screen", "clear", true, (ctx) =>
+		ctx.clear(),
+	);
 
-	registerCommand("date", "Print local date/time", "date", (ctx) => {
+	registerCommand("date", "Print local date/time", "date", true, (ctx) => {
 		ctx.printLine(new Date().toString(), "muted");
 	});
 
-	registerCommand("echo", "Print args", "echo <text>", (ctx, args) => {
+	registerCommand("echo", "Print args", "echo <text>", true, (ctx, args) => {
 		ctx.printLine(args.join(" "));
 	});
 
@@ -49,6 +52,7 @@ export function registerSystemCommands({
 		"theme",
 		"Switch theme",
 		"theme [dark|light|toggle]",
+		true,
 		(ctx, args) => {
 			const next = (args[0] ?? "").toLowerCase();
 			const current = ctx.theme.get();

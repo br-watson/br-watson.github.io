@@ -13,6 +13,7 @@ interface AliasDefinition {
 	usage: string;
 	targetCommand: string;
 	args: string[];
+	showInHelp: boolean;
 }
 
 function registerAliases(
@@ -21,8 +22,12 @@ function registerAliases(
 	aliases: AliasDefinition[],
 ) {
 	for (const alias of aliases) {
-		registerCommand(alias.name, alias.summary, alias.usage, (ctx) =>
-			commands.get(alias.targetCommand)?.execute(ctx, alias.args),
+		registerCommand(
+			alias.name,
+			alias.summary,
+			alias.usage,
+			alias.showInHelp,
+			(ctx) => commands.get(alias.targetCommand)?.execute(ctx, alias.args),
 		);
 	}
 }
@@ -32,7 +37,7 @@ export function registerContentCommands({
 	commands,
 	registerCommand,
 }: ContentOptions) {
-	registerCommand("whoami", "About me", "whoami", (ctx) => {
+	registerCommand("whoami", "About me", "whoami", true, (ctx) => {
 		ctx.printLine(
 			`${String(profile.name)} — ${String(profile.role)} (${String(profile.location)})`,
 		);
@@ -45,6 +50,7 @@ export function registerContentCommands({
 			usage: "bio",
 			targetCommand: "cat",
 			args: ["bio.txt"],
+			showInHelp: true,
 		},
 		{
 			name: "projects",
@@ -52,6 +58,7 @@ export function registerContentCommands({
 			usage: "projects",
 			targetCommand: "cat",
 			args: ["projects.txt"],
+			showInHelp: true,
 		},
 		{
 			name: "contact",
@@ -59,6 +66,7 @@ export function registerContentCommands({
 			usage: "contact",
 			targetCommand: "cat",
 			args: ["contact.txt"],
+			showInHelp: true,
 		},
 		{
 			name: "cv",
@@ -66,6 +74,7 @@ export function registerContentCommands({
 			usage: "cv",
 			targetCommand: "open",
 			args: ["cv"],
+			showInHelp: true,
 		},
 		{
 			name: "skills",
@@ -73,6 +82,7 @@ export function registerContentCommands({
 			usage: "skills",
 			targetCommand: "cat",
 			args: ["skills.txt"],
+			showInHelp: true,
 		},
 		{
 			name: "education",
@@ -80,6 +90,7 @@ export function registerContentCommands({
 			usage: "education",
 			targetCommand: "cat",
 			args: ["education.txt"],
+			showInHelp: true,
 		},
 		{
 			name: "roles",
@@ -87,6 +98,7 @@ export function registerContentCommands({
 			usage: "roles",
 			targetCommand: "cat",
 			args: ["roles.txt"],
+			showInHelp: true,
 		},
 	]);
 }

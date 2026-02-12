@@ -26,10 +26,11 @@ export function createCommandRegistry({
 		name,
 		summary,
 		usage,
+		showInHelp,
 		execute,
 		complete,
 	) => {
-		commands.set(name, { name, summary, usage, execute, complete });
+		commands.set(name, { name, summary, usage, showInHelp, execute, complete });
 	};
 
 	registerSystemCommands({ commands, registerCommand, isMobile });

@@ -13,6 +13,7 @@ export interface Command {
 	name: string;
 	summary: string;
 	usage: string;
+	showInHelp: boolean;
 	execute: (ctx: Context, args: string[]) => void | Promise<void>;
 	complete?: (ctx: Context, req: CompletionRequest) => string[];
 }
@@ -23,6 +24,7 @@ export type RegisterCommand = (
 	name: string,
 	summary: string,
 	usage: string,
+	showInHelp: boolean,
 	execute: (ctx: Context, args: string[]) => void | Promise<void>,
 	complete?: (ctx: Context, req: CompletionRequest) => string[],
 ) => void;
