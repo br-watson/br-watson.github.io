@@ -1,5 +1,6 @@
 import type { Profile } from "../data/profile.js";
 import { registerContentCommands } from "./commands/content.js";
+import { registerFunCommands } from "./commands/fun.js";
 import { registerNavigationCommands } from "./commands/navigation.js";
 import { buildOpenAliasMap } from "./commands/openAliases.js";
 import { registerSystemCommands } from "./commands/system.js";
@@ -36,6 +37,7 @@ export function createCommandRegistry({
 	registerSystemCommands({ commands, registerCommand, isMobile });
 	registerNavigationCommands({ registerCommand, isMobile });
 	registerContentCommands({ profile, commands, registerCommand });
+	registerFunCommands({ registerCommand });
 
 	return { commands };
 }

@@ -9,6 +9,7 @@ import type { Renderer } from "../ui/domRenderer";
 import type { Commands } from "./commands";
 import { createCompletionEngine } from "./completionEngine.js";
 import { parseInputLine } from "./inputParser.js";
+import { clamp, maxLineLength } from "./sizing.js";
 
 type TextSeg = { type: "text"; text: string };
 type SpanSeg = { type: "span"; className: string; text: string };
@@ -22,6 +23,7 @@ export interface Context {
 	openUrl: (href: string | URL) => void;
 	printLine: (content: string | Segment[], className?: string) => void;
 	printPre: (text: string, className?: string) => void;
+	getColumns: () => number;
 	seg: { t: typeof t; s: typeof s; l: typeof l };
 	listHome: () => string[];
 	resolveHomeItem: (
@@ -105,10 +107,6 @@ export function createTerminal({
 		renderIntro();
 	}
 
-	function maxLineLength(lines: string[]) {
-		return lines.reduce((max, line) => Math.max(max, line.length), 0);
-	}
-
 	function truncateText(value: string, maxLength: number) {
 		if (value.length <= maxLength) return value;
 		if (maxLength <= 1) return "…";
@@ -179,10 +177,6 @@ export function createTerminal({
 		printLine([s("accent", STATUS_LABEL)], "muted");
 	}
 
-	function clamp(n: number, min: number, max: number) {
-		return Math.max(min, Math.min(max, n));
-	}
-
 	function printLine(
 		content: string | Segment[],
 		className = "ok",
@@ -216,6 +210,7 @@ export function createTerminal({
 			openUrl,
 			printLine,
 			printPre,
+			getColumns: renderer.getColumns,
 			seg: { t, s, l },
 			listHome,
 			resolveHomeItem,
