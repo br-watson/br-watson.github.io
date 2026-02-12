@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Terminal-style developer portfolio" />
+    <title>Brad — Terminal Portfolio</title>
+    <script>
+        (() => {
+            const THEME_KEY = "terminal-theme";
+            const isTheme = (value) => value === "light" || value === "dark";
+
+            try {
+                const stored = localStorage.getItem(THEME_KEY);
+                const preferred = window.matchMedia("(prefers-color-scheme: light)").matches
+                    ? "light"
+                    : "dark";
+                document.documentElement.dataset.theme = isTheme(stored) ? stored : preferred;
+            } catch {
+                document.documentElement.dataset.theme = "dark";
+            }
+        })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+<main class="terminal" aria-label="Terminal portfolio">
+    <h1 class="sr-only">Brad - Terminal Portfolio</h1>
+    <header class="topbar">
+        <div class="dots" aria-hidden="true">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="title">brad@portfolio: ~</div>
+        <div class="actions">
+            <div class="hint">Type <kbd>help</kbd></div>
+            <span class="wip-badge" aria-label="Work in progress">[WIP]</span>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false">
+                Light
+            </button>
+        </div>
+    </header>
+
+    <section
+        id="screen"
+        class="screen"
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-atomic="false"
+        aria-label="Terminal output"
+    ></section>
+
+    <nav id="quickLinks" class="quick-links" aria-label="Quick links">
+        <span class="quick-links-label">Shortcuts</span>
+        <div id="quickLinksList" class="quick-links-list"></div>
+    </nav>
+
+    <section id="mobileCommandTray" class="mobile-command-tray" aria-label="Mobile command tray" hidden>
+        <div id="mobileCommandList" class="mobile-command-list" role="group" aria-label="Quick commands"></div>
+        <div class="mobile-command-actions">
+            <button id="mobileTrayBack" class="mobile-tray-back" type="button" hidden>Back</button>
+            <button
+                id="mobileCustomTrigger"
+                class="mobile-custom-trigger"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="mobileCommandDialog"
+                aria-expanded="false"
+            >
+                Custom
+            </button>
+        </div>
+    </section>
+
+    <div
+        id="mobileCommandDialog"
+        class="mobile-command-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobileCustomTitle"
+        aria-hidden="true"
+        hidden
+    >
+        <div class="mobile-command-backdrop" data-dialog-close></div>
+        <form id="mobileCustomForm" class="mobile-custom-form" autocomplete="off" novalidate>
+            <h2 id="mobileCustomTitle" class="mobile-custom-title">Run a custom command</h2>
+            <label class="sr-only" for="mobileCustomInput">Custom command</label>
+            <input
+                id="mobileCustomInput"
+                type="text"
+                inputmode="text"
+                spellcheck="false"
+                autocapitalize="off"
+                autocorrect="off"
+                enterkeyhint="go"
+                placeholder="Type a command (try: help)"
+            />
+            <div class="mobile-custom-suggestions-wrap">
+                <span id="mobileCustomSuggestionsHint" class="mobile-custom-suggestions-hint">
+                    Suggestions and history appear here
+                </span>
+                <div
+                    id="mobileCustomSuggestions"
+                    class="mobile-custom-suggestions"
+                    aria-label="Custom command suggestions"
+                ></div>
+            </div>
+            <div class="mobile-custom-actions">
+                <button id="mobileCustomCancel" class="mobile-custom-cancel" type="button">
+                    Cancel
+                </button>
+                <button class="mobile-custom-run" type="submit">Run</button>
+            </div>
+        </form>
+    </div>
+
+    <form id="prompt" class="prompt" autocomplete="off">
+        <span class="ps1" aria-hidden="true">brad@portfolio</span>
+        <span class="sep" aria-hidden="true">:</span>
+        <span class="cwd" aria-hidden="true">~</span>
+        <span class="sep" aria-hidden="true">$</span>
+
+        <label class="sr-only" for="input">Command input</label>
+        <input
+            id="input"
+            type="text"
+            placeholder="Type a command (try: help)"
+            inputmode="text"
+            spellcheck="false"
+            autocapitalize="off"
+            autocorrect="off"
+            enterkeyhint="go"
+            autofocus
+        />
+    </form>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
