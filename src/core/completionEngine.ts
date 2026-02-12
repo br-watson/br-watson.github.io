@@ -36,7 +36,12 @@ export function createCompletionEngine({
 	getContext,
 	onListMatches,
 }: CompletionEngineOptions): CompletionEngine {
-	const commandNames = Array.from(commands.keys()).sort();
+	const commandNames = Array.from(commands.entries())
+		.map(([name, command]) => ({
+			name,
+			showInHelp: command.showInHelp,
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name));
 
 	let state: CompletionState | null = null;
 
@@ -50,9 +55,11 @@ export function createCompletionEngine({
 
 		if (tokens.length === 1 && !endsWithWhitespace) {
 			const prefix = tokens[0];
-			const matches = commandNames.filter((command) =>
-				command.startsWith(prefix),
-			);
+			const matches = commandNames
+				.filter(
+					(command) => command.showInHelp && command.name.startsWith(prefix),
+				)
+				.map((command) => command.name);
 			return {
 				kind: "cmd",
 				prefix,
