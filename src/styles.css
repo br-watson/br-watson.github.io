@@ -350,6 +350,10 @@ a:hover {
 	display: none;
 }
 
+.mobile-custom-trigger[hidden] {
+	display: none;
+}
+
 .quick-links-label {
 	color: var(--muted);
 	font-size: clamp(10px, 1.1vw, 11px);
