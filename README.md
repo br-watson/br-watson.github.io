@@ -4,6 +4,12 @@ Interactive terminal-style portfolio built with TypeScript, HTML, and CSS.
 
 Live site: [bwatson.uk](https://bwatson.uk) (deployed on GitHub Pages)
 
+## Status
+
+This project is still very much a work in progress.
+
+See the current plan in the [`todo` array in `src/data/profile.ts`](./src/data/profile.ts#L154). Or, to see the todo list, run `cat todo.md` in the portfolio terminal/profile.
+
 ## Highlights
 
 - Terminal-first UI with command parsing, history, and autocomplete.
