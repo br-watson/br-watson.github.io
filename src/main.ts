@@ -77,7 +77,9 @@ const MOBILE_TRAY_PRIORITY = [
 function buildMobileTrayCommands(
 	registry: ReadonlyMap<string, Command>,
 ): MobileTrayCommand[] {
-	const all = Array.from(registry.values());
+	const all = Array.from(registry.values()).filter(
+		(command) => command.showInMobileTray,
+	);
 	const prioritySet = new Set<string>(MOBILE_TRAY_PRIORITY);
 
 	const prioritised: Command[] = [];

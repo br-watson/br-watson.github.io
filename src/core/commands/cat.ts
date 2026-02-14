@@ -134,6 +134,7 @@ export function registerCatCommand(registerCommand: RegisterCommand) {
 		"Print file contents",
 		"cat <file>",
 		true,
+		true,
 		(ctx, args) => {
 			const name = args[0];
 			if (!name) {

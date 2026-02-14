@@ -17,6 +17,7 @@ export function registerNavigationCommands({
 		"List files (only ~ supported)",
 		"ls [path]",
 		true,
+		true,
 		(ctx, args) => {
 			const path = args[0] ?? "~";
 			if (path !== "~") {
@@ -36,6 +37,7 @@ export function registerNavigationCommands({
 		"open",
 		"Open link",
 		"open <alias>",
+		true,
 		true,
 		(ctx, args) => {
 			const { t, l } = ctx.seg;

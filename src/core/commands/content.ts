@@ -14,6 +14,7 @@ interface AliasDefinition {
 	targetCommand: string;
 	args: string[];
 	showInHelp: boolean;
+	showInMobileTray: boolean;
 }
 
 function registerAliases(
@@ -27,6 +28,7 @@ function registerAliases(
 			alias.summary,
 			alias.usage,
 			alias.showInHelp,
+			alias.showInMobileTray,
 			(ctx) => commands.get(alias.targetCommand)?.execute(ctx, alias.args),
 		);
 	}
@@ -37,7 +39,7 @@ export function registerContentCommands({
 	commands,
 	registerCommand,
 }: ContentOptions) {
-	registerCommand("whoami", "About me", "whoami", true, (ctx) => {
+	registerCommand("whoami", "About me", "whoami", true, true, (ctx) => {
 		ctx.printLine(
 			`${String(profile.name)} — ${String(profile.role)} (${String(profile.location)})`,
 		);
@@ -51,6 +53,7 @@ export function registerContentCommands({
 			targetCommand: "cat",
 			args: ["bio.txt"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 		{
 			name: "projects",
@@ -59,6 +62,7 @@ export function registerContentCommands({
 			targetCommand: "cat",
 			args: ["projects.txt"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 		{
 			name: "contact",
@@ -67,6 +71,7 @@ export function registerContentCommands({
 			targetCommand: "cat",
 			args: ["contact.txt"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 		{
 			name: "cv",
@@ -75,6 +80,7 @@ export function registerContentCommands({
 			targetCommand: "open",
 			args: ["cv"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 		{
 			name: "skills",
@@ -83,6 +89,7 @@ export function registerContentCommands({
 			targetCommand: "cat",
 			args: ["skills.txt"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 		{
 			name: "education",
@@ -91,6 +98,7 @@ export function registerContentCommands({
 			targetCommand: "cat",
 			args: ["education.txt"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 		{
 			name: "roles",
@@ -99,6 +107,7 @@ export function registerContentCommands({
 			targetCommand: "cat",
 			args: ["roles.txt"],
 			showInHelp: true,
+			showInMobileTray: true,
 		},
 	]);
 }

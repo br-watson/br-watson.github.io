@@ -11,7 +11,7 @@ export function registerSystemCommands({
 	registerCommand,
 	isMobile,
 }: SystemOptions) {
-	registerCommand("help", "Show this help", "help", true, (ctx) => {
+	registerCommand("help", "Show this help", "help", true, true, (ctx) => {
 		const { s } = ctx.seg;
 		ctx.printLine([s("accent", "Available commands")], "ok");
 
@@ -36,22 +36,37 @@ export function registerSystemCommands({
 		ctx.printPre(lines.join("\n"), "ok");
 	});
 
-	registerCommand("clear", "Clear the screen", "clear", true, (ctx) =>
+	registerCommand("clear", "Clear the screen", "clear", true, true, (ctx) =>
 		ctx.clear(),
 	);
 
-	registerCommand("date", "Print local date/time", "date", true, (ctx) => {
-		ctx.printLine(new Date().toString(), "muted");
-	});
+	registerCommand(
+		"date",
+		"Print local date/time",
+		"date",
+		true,
+		true,
+		(ctx) => {
+			ctx.printLine(new Date().toString(), "muted");
+		},
+	);
 
-	registerCommand("echo", "Print args", "echo <text>", true, (ctx, args) => {
-		ctx.printLine(args.join(" "));
-	});
+	registerCommand(
+		"echo",
+		"Print args",
+		"echo <text>",
+		true,
+		false,
+		(ctx, args) => {
+			ctx.printLine(args.join(" "));
+		},
+	);
 
 	registerCommand(
 		"theme",
 		"Switch theme",
 		"theme [dark|light|toggle]",
+		true,
 		true,
 		(ctx, args) => {
 			const next = (args[0] ?? "").toLowerCase();

@@ -121,6 +121,7 @@ export function registerFunCommands({ registerCommand }: FunOptions): void {
 		"Penguin says something",
 		"pengsay [text]",
 		true,
+		true,
 		(ctx, args) => {
 			const message = args.join(" ").trim() || DEFAULT_MESSAGE;
 			const columns = Math.max(1, ctx.getColumns());
