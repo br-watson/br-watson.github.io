@@ -18,6 +18,7 @@ interface CompletionMatches {
 	prefix: string;
 	matches: string[];
 	buildValue: (choice: string) => string;
+	buildAutocompleteValue?: (choice: string) => string;
 }
 
 interface CompletionEngineOptions {
@@ -45,6 +46,12 @@ export function createCompletionEngine({
 
 	let state: CompletionState | null = null;
 
+	function buildCommandAutocompleteValue(choice: string): string {
+		const command = commands.get(choice);
+		if (!command || command.argMode === "none") return choice;
+		return `${choice} `;
+	}
+
 	function getCompletionMatches(
 		current: string,
 		parsed = parseInputLine(current),
@@ -65,6 +72,7 @@ export function createCompletionEngine({
 				prefix,
 				matches,
 				buildValue: (choice) => choice,
+				buildAutocompleteValue: buildCommandAutocompleteValue,
 			};
 		}
 
@@ -142,6 +150,8 @@ export function createCompletionEngine({
 				completionMatches.prefix,
 				completionMatches.matches,
 				completionMatches.buildValue,
+				completionMatches.buildAutocompleteValue ??
+					completionMatches.buildValue,
 			) ?? current
 		);
 	}
@@ -152,6 +162,7 @@ export function createCompletionEngine({
 		prefix: string,
 		matches: string[],
 		buildValue: (choice: string) => string,
+		buildSingleValue: (choice: string) => string,
 	): string | null {
 		if (matches.length === 0) {
 			state = null;
@@ -160,7 +171,7 @@ export function createCompletionEngine({
 
 		if (matches.length === 1) {
 			state = null;
-			return buildValue(matches[0]);
+			return buildSingleValue(matches[0]);
 		}
 
 		const matchesKey = makeMatchesKey(matches);
