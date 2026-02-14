@@ -116,13 +116,14 @@ function getRenderableLines(message: string, columns: number): string[] | null {
 }
 
 export function registerFunCommands({ registerCommand }: FunOptions): void {
-	registerCommand(
-		"pengsay",
-		"Penguin says something",
-		"pengsay [text]",
-		true,
-		true,
-		(ctx, args) => {
+	registerCommand({
+		name: "pengsay",
+		summary: "Penguin says something",
+		usage: "pengsay [text]",
+		showInHelp: true,
+		showInMobileTray: true,
+		argMode: "optional",
+		execute: (ctx, args) => {
 			const message = args.join(" ").trim() || DEFAULT_MESSAGE;
 			const columns = Math.max(1, ctx.getColumns());
 			const lines = columns >= 5 ? getRenderableLines(message, columns) : null;
@@ -134,5 +135,5 @@ export function registerFunCommands({ registerCommand }: FunOptions): void {
 
 			ctx.printPre(lines.join("\n"), "ok");
 		},
-	);
+	});
 }

@@ -23,14 +23,16 @@ function registerAliases(
 	aliases: AliasDefinition[],
 ) {
 	for (const alias of aliases) {
-		registerCommand(
-			alias.name,
-			alias.summary,
-			alias.usage,
-			alias.showInHelp,
-			alias.showInMobileTray,
-			(ctx) => commands.get(alias.targetCommand)?.execute(ctx, alias.args),
-		);
+		registerCommand({
+			name: alias.name,
+			summary: alias.summary,
+			usage: alias.usage,
+			showInHelp: alias.showInHelp,
+			showInMobileTray: alias.showInMobileTray,
+			argMode: "none",
+			execute: (ctx) =>
+				commands.get(alias.targetCommand)?.execute(ctx, alias.args),
+		});
 	}
 }
 
@@ -39,10 +41,18 @@ export function registerContentCommands({
 	commands,
 	registerCommand,
 }: ContentOptions) {
-	registerCommand("whoami", "About me", "whoami", true, true, (ctx) => {
-		ctx.printLine(
-			`${String(profile.name)} — ${String(profile.role)} (${String(profile.location)})`,
-		);
+	registerCommand({
+		name: "whoami",
+		summary: "About me",
+		usage: "whoami",
+		showInHelp: true,
+		showInMobileTray: true,
+		argMode: "none",
+		execute: (ctx) => {
+			ctx.printLine(
+				`${String(profile.name)} — ${String(profile.role)} (${String(profile.location)})`,
+			);
+		},
 	});
 
 	registerAliases(registerCommand, commands, [

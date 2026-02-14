@@ -5,13 +5,14 @@ import { registerNavigationCommands } from "./commands/navigation.js";
 import { buildOpenAliasMap } from "./commands/openAliases.js";
 import { registerSystemCommands } from "./commands/system.js";
 import type {
+	ArgMode,
 	Command,
 	Commands,
 	CompletionRequest,
 	RegisterCommand,
 } from "./commands/types.js";
 
-export type { Command, Commands, CompletionRequest };
+export type { ArgMode, Command, Commands, CompletionRequest };
 export { buildOpenAliasMap };
 
 export function createCommandRegistry({
@@ -23,24 +24,8 @@ export function createCommandRegistry({
 }) {
 	const commands: Commands = new Map();
 
-	const registerCommand: RegisterCommand = (
-		name,
-		summary,
-		usage,
-		showInHelp,
-		showInMobileTray,
-		execute,
-		complete,
-	) => {
-		commands.set(name, {
-			name,
-			summary,
-			usage,
-			showInHelp,
-			showInMobileTray,
-			execute,
-			complete,
-		});
+	const registerCommand: RegisterCommand = (command) => {
+		commands.set(command.name, command);
 	};
 
 	registerSystemCommands({ commands, registerCommand, isMobile });

@@ -1,3 +1,5 @@
+import { parseInputLine } from "../core/inputParser.js";
+
 const MAX_CUSTOM_SUGGESTIONS = 6;
 
 type TrayCommandKind = "simple" | "withArgs";
@@ -28,6 +30,7 @@ interface MobileCommandTrayOptions {
 	cancel: HTMLButtonElement | null;
 	terminal: CompletionTerminalLike;
 	commands: readonly MobileTrayCommand[];
+	commandsWithArgs: readonly string[];
 	onRunCommand: (command: string) => Promise<void> | void;
 }
 
@@ -177,8 +180,21 @@ function applySuggestion(
 	input: HTMLInputElement,
 	value: string,
 	type: SuggestionType | undefined,
+	commandsWithArgs: ReadonlySet<string>,
 ): void {
 	if (type === "completion") {
+		const currentInput = input.value;
+		const parsed = parseInputLine(currentInput);
+		const isCommandCompletion =
+			parsed.tokens.length === 1 && !parsed.endsWithWhitespace;
+		if (isCommandCompletion) {
+			const command = value.trim();
+			setInputValue(
+				input,
+				commandsWithArgs.has(command) ? `${command} ` : command,
+			);
+			return;
+		}
 		const next = /\s$/.test(value) ? value : `${value} `;
 		setInputValue(input, next);
 		return;
@@ -200,6 +216,7 @@ export function setupMobileCommandTray({
 	cancel,
 	terminal,
 	commands,
+	commandsWithArgs,
 	onRunCommand,
 }: MobileCommandTrayOptions): void {
 	if (!enabled) {
@@ -219,6 +236,9 @@ export function setupMobileCommandTray({
 	if (!(cancel instanceof HTMLButtonElement)) return;
 
 	const normalizedCommands = normalizeCommands(commands);
+	const commandsWithArgsSet = new Set(
+		commandsWithArgs.map((command) => command.trim()),
+	);
 	let isRunning = false;
 	let inArgumentMode = false;
 
@@ -371,7 +391,7 @@ export function setupMobileCommandTray({
 		const value = button.dataset.value;
 		if (!value) return;
 		const type = button.dataset.kind as SuggestionType | undefined;
-		applySuggestion(input, value, type);
+		applySuggestion(input, value, type, commandsWithArgsSet);
 		refreshSuggestions();
 		requestAnimationFrame(() => {
 			input.focus({ preventScroll: true });

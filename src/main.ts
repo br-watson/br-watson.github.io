@@ -99,6 +99,14 @@ function buildMobileTrayCommands(
 	}));
 }
 
+function buildCommandsWithArgs(
+	registry: ReadonlyMap<string, Command>,
+): string[] {
+	return Array.from(registry.values())
+		.filter((command) => command.argMode !== "none")
+		.map((command) => command.name);
+}
+
 if (title) title.textContent = `${SHELL_ID}: ~`;
 if (ps1) ps1.textContent = SHELL_ID;
 
@@ -125,6 +133,7 @@ const terminal = createTerminal({
 	isMobile: prefersCoarsePointer,
 });
 const mobileTrayCommands = buildMobileTrayCommands(commands);
+const commandsWithArgs = buildCommandsWithArgs(commands);
 
 let promptController: ReturnType<typeof createPromptController> | null = null;
 let isRunningCommand = false;
@@ -182,6 +191,7 @@ setupMobileCommandTray({
 		mobileCustomCancel instanceof HTMLButtonElement ? mobileCustomCancel : null,
 	terminal,
 	commands: mobileTrayCommands,
+	commandsWithArgs,
 	onRunCommand: runCommand,
 });
 

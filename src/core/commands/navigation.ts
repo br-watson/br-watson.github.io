@@ -12,13 +12,14 @@ export function registerNavigationCommands({
 	registerCommand,
 	isMobile,
 }: NavigationOptions) {
-	registerCommand(
-		"ls",
-		"List files (only ~ supported)",
-		"ls [path]",
-		true,
-		true,
-		(ctx, args) => {
+	registerCommand({
+		name: "ls",
+		summary: "List files (only ~ supported)",
+		usage: "ls [path]",
+		showInHelp: true,
+		showInMobileTray: true,
+		argMode: "optional",
+		execute: (ctx, args) => {
 			const path = args[0] ?? "~";
 			if (path !== "~") {
 				ctx.printLine(
@@ -29,17 +30,18 @@ export function registerNavigationCommands({
 			}
 			ctx.printPre(ctx.listHome().join("\n"), "ok");
 		},
-	);
+	});
 
 	registerCatCommand(registerCommand);
 
-	registerCommand(
-		"open",
-		"Open link",
-		"open <alias>",
-		true,
-		true,
-		(ctx, args) => {
+	registerCommand({
+		name: "open",
+		summary: "Open link",
+		usage: "open <alias>",
+		showInHelp: true,
+		showInMobileTray: true,
+		argMode: "required",
+		execute: (ctx, args) => {
 			const { t, l } = ctx.seg;
 			const targetRaw = args[0];
 			const target = (targetRaw ?? "").toLowerCase();
@@ -66,9 +68,9 @@ export function registerNavigationCommands({
 
 			ctx.printLine(`open: unknown target "${targetRaw}"`, "error");
 		},
-		(ctx, req) => {
+		complete: (ctx, req) => {
 			const alias = buildOpenAliasMap(ctx.profile);
 			return completeFirstArg(req, alias.keys());
 		},
-	);
+	});
 }

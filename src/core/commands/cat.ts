@@ -129,13 +129,14 @@ function renderHomeItem(ctx: Context, name: string, item: FsNode) {
 }
 
 export function registerCatCommand(registerCommand: RegisterCommand) {
-	registerCommand(
-		"cat",
-		"Print file contents",
-		"cat <file>",
-		true,
-		true,
-		(ctx, args) => {
+	registerCommand({
+		name: "cat",
+		summary: "Print file contents",
+		usage: "cat <file>",
+		showInHelp: true,
+		showInMobileTray: true,
+		argMode: "required",
+		execute: (ctx, args) => {
 			const name = args[0];
 			if (!name) {
 				ctx.printLine("cat: missing file operand", "error");
@@ -150,12 +151,12 @@ export function registerCatCommand(registerCommand: RegisterCommand) {
 
 			renderHomeItem(ctx, name, item);
 		},
-		(ctx, req) => {
+		complete: (ctx, req) => {
 			const candidates = ctx.listHome().filter((entry: string) => {
 				const item = ctx.resolveHomeItem(entry);
 				return item ? COMPLETABLE_CAT_TYPES.has(item.type) : false;
 			});
 			return completeFirstArg(req, candidates);
 		},
-	);
+	});
 }
