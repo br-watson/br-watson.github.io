@@ -356,6 +356,13 @@ export function setupMobileCommandTray({
 		refreshSuggestions();
 	});
 
+	suggestions.addEventListener("pointerdown", (event) => {
+		const target = event.target;
+		if (!(target instanceof Element)) return;
+		if (!target.closest("button[data-value]")) return;
+		event.preventDefault();
+	});
+
 	suggestions.addEventListener("click", (event) => {
 		const target = event.target;
 		if (!(target instanceof Element)) return;
@@ -366,6 +373,9 @@ export function setupMobileCommandTray({
 		const type = button.dataset.kind as SuggestionType | undefined;
 		applySuggestion(input, value, type);
 		refreshSuggestions();
+		requestAnimationFrame(() => {
+			input.focus({ preventScroll: true });
+		});
 	});
 
 	dialog.addEventListener("click", (event) => {
