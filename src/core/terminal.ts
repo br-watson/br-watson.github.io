@@ -85,9 +85,9 @@ export function createTerminal({
 		printBanner();
 		printLine(
 			[
-				t("Type "),
+				isMobile ? t("Tap ") : t("Type "),
 				s("accent", "help"),
-				t(" to see commands.\n"),
+				t(" to see commands and their uses.\n"),
 				s("accent", "Tips: "),
 				isMobile
 					? t(
