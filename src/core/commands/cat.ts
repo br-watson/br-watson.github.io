@@ -36,7 +36,12 @@ function renderLink(
 			t(`${name} -> `),
 			l(item.href),
 			t(" (click me! or run "),
-			s("accent", `open ${name}`),
+			s(
+				"accent",
+				`open ${
+					name.includes(".") ? name.slice(0, name.lastIndexOf(".")) : name
+				}`,
+			),
 			t(")"),
 		],
 		"muted",
