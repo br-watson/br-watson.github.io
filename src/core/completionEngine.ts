@@ -234,7 +234,9 @@ export function createCompletionEngine({
 }
 
 function quoteIfNeeded(value: string): string {
-	return /\s/.test(value) ? `"${value.replace(/"/g, '\\"')}"` : value;
+	const escaped = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+	if (escaped.length === 0) return '""';
+	return /[\s"'\\]/.test(value) ? `"${escaped}"` : escaped;
 }
 
 function longestCommonPrefix(items: string[]): string {
