@@ -39,12 +39,25 @@ function getOppositeTheme(theme: Theme): Theme {
 export function createThemeController({
 	themeToggle,
 	toast,
-	storage = window.localStorage,
+	storage,
 	doc = document,
 	matchMedia = window.matchMedia?.bind(window),
 }: ThemeOptions) {
+	const safeStorage: Storage | null = (() => {
+		try {
+			return storage ?? window.localStorage;
+		} catch {
+			return null;
+		}
+	})();
+
 	function getStoredTheme(): Theme | null {
-		const value: string | null = storage.getItem(THEME_KEY);
+		let value: string | null = null;
+		try {
+			value = safeStorage?.getItem(THEME_KEY) ?? null;
+		} catch {
+			return null;
+		}
 		return isTheme(value) ? value : null;
 	}
 
@@ -75,7 +88,11 @@ export function createThemeController({
 			}
 		}
 
-		if (persist) storage.setItem(THEME_KEY, theme);
+		if (persist) {
+			try {
+				safeStorage?.setItem(THEME_KEY, theme);
+			} catch {}
+		}
 		if (announce && changed) toast.show(`theme: ${theme}`);
 	}
 
