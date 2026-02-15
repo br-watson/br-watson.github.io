@@ -99,3 +99,9 @@ Deploy command:
 ```bash
 pnpm run deploy
 ```
+
+## License
+
+Code is licensed under the MIT License - see the [LICENSE](LICENSE) file.
+
+Personal content (CV, dissertation, written content, etc.) © Bradley Watson 2026. All rights reserved.
